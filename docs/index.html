@@ -892,7 +892,7 @@ function renderDetail(index) {
             ${d.week === 1 ? `
             <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:10px;">
               <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Open ${d.path} in your editor</li>
-              <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Find the ${d.section || 'day\\'s'} section</li>
+              <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Find the ${d.section || "day's"} section</li>
               <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Replace pass with real code</li>
             </ul>` : ''}
           </div>
