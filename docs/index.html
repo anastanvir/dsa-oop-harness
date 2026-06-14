@@ -3,34 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DocuMind — AI Document Processing Pipeline</title>
+<title>DocuMind — 28-Day Pipeline Grind</title>
 <style>
-/* ═══════════════════════════════════════════════
-   ROOT TOKENS
-   ═══════════════════════════════════════════════ */
 :root {
   --bg: #0a0a0b;
   --bg-surface: #121214;
   --bg-card: #18181b;
   --bg-card-hover: #1f1f23;
   --bg-elevated: #222226;
-  --bg-code: #0d0d0f;
   --border: #27272a;
-  --border-accent: #3f3f46;
+  --border-light: #2f2f33;
   --text-primary: #f4f4f5;
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
   --accent: #22d379;
   --accent-dim: #16a34a;
   --accent-glow: rgba(34, 211, 121, 0.12);
+  --accent-subtle: rgba(34, 211, 121, 0.06);
   --danger: #ef4444;
   --warning: #f59e0b;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro", "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro", "Inter", "Segoe UI", system-ui, sans-serif;
   --font-mono: "SF Mono", "Fira Code", "Cascadia Code", "JetBrains Mono", monospace;
-  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme="light"] {
@@ -39,292 +37,157 @@
   --bg-card: #f4f4f5;
   --bg-card-hover: #e4e4e7;
   --bg-elevated: #e4e4e7;
-  --bg-code: #f0f0f1;
   --border: #d4d4d8;
-  --border-accent: #a1a1aa;
+  --border-light: #e4e4e7;
   --text-primary: #18181b;
   --text-secondary: #52525b;
   --text-muted: #a1a1aa;
   --accent: #16a34a;
-  --accent-glow: rgba(22, 163, 74, 0.08);
+  --accent-glow: rgba(22, 163, 74, 0.1);
+  --accent-subtle: rgba(22, 163, 74, 0.05);
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-body {
-  font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text-primary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  line-height: 1.5;
-}
-::-webkit-scrollbar { width: 6px; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; }
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-/* ═══════════════════════════════════════════════
-   HEADER
-   ═══════════════════════════════════════════════ */
-header {
-  padding: 16px 28px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  background: var(--bg-surface);
-}
+/* ── HEADER ── */
+header { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; background: var(--bg-surface); position: sticky; top: 0; z-index: 50; }
 .header-left { display: flex; align-items: center; gap: 14px; }
-.logo {
-  width: 32px; height: 32px;
-  background: var(--accent);
-  border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 13px; color: #000;
-  flex-shrink: 0;
-}
+.logo { width: 32px; height: 32px; background: var(--accent); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; color: #000; flex-shrink: 0; }
 .header-title h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
-.header-title p { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
-.header-right { display: flex; align-items: center; gap: 18px; }
+.header-title p { font-size: 11px; color: var(--text-secondary); margin-top: -1px; }
+.header-right { display: flex; align-items: center; gap: 16px; }
 .header-stat { text-align: right; }
-.header-stat .number { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
-.header-stat .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-.theme-toggle {
-  background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
-  color: var(--text-secondary); width: 34px; height: 34px; cursor: pointer;
-  font-size: 15px; display: flex; align-items: center; justify-content: center;
-  transition: var(--transition);
-}
-.theme-toggle:hover { border-color: var(--border-accent); color: var(--text-primary); }
+.header-stat .num { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
+.header-stat .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-secondary); width: 32px; height: 32px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+.theme-btn:hover { border-color: var(--border-light); color: var(--text-primary); }
 
-/* ═══════════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════════ */
-.app-container { display: flex; flex: 1; overflow: hidden; }
+/* ── LAYOUT ── */
+.app { display: flex; flex: 1; overflow: hidden; }
 
-/* ═══════════════════════════════════════════════
-   SIDEBAR
-   ═══════════════════════════════════════════════ */
+/* ── SIDEBAR ── */
 .sidebar { width: 300px; min-width: 300px; border-right: 1px solid var(--border); overflow-y: auto; background: var(--bg-surface); }
-.sidebar-header { padding: 14px 18px; border-bottom: 1px solid var(--border); }
-.sidebar-header h2 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 10px; }
-.progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
-.progress-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 500ms ease; }
-.progress-text { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.timeline-weeks { padding: 8px 0; }
-.week-group {}
-.week-label { padding: 10px 18px 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
-.day-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 18px; cursor: pointer; transition: var(--transition);
-  border-left: 2px solid transparent; position: relative;
-}
-.day-item:hover { background: var(--bg-card-hover); }
-.day-item.active { background: var(--accent-glow); border-left-color: var(--accent); }
-.day-indicator {
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 2px solid var(--border); display: flex; align-items: center;
-  justify-content: center; font-size: 10px; font-weight: 600;
-  flex-shrink: 0; transition: var(--transition); color: var(--text-muted);
-}
-.day-item.completed .day-indicator { background: var(--accent); border-color: var(--accent); color: #000; }
-.day-item.in-progress .day-indicator { border-color: var(--accent); color: var(--accent); }
-.day-item.not-started .day-indicator { border-color: var(--border); color: var(--text-muted); }
-.day-meta { flex: 1; min-width: 0; }
-.day-meta .day-topic { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.day-meta .day-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.day-status-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.day-item.completed .day-status-dot { background: var(--accent); }
-.day-item.in-progress .day-status-dot { background: var(--warning); }
-.day-item.not-started .day-status-dot { background: var(--text-muted); }
+.sidebar-head { padding: 14px 18px 12px; border-bottom: 1px solid var(--border); }
+.sidebar-head h2 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 10px; }
+.pbar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+.pbar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 500ms var(--ease-out); }
+.ptext { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.tl-weeks { padding: 8px 0; }
+.week-g { }
+.week-l { padding: 6px 18px 3px; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+.day-i { display: flex; align-items: center; gap: 10px; padding: 8px 18px; cursor: pointer; transition: var(--transition); border-left: 2px solid transparent; }
+.day-i:hover { background: var(--bg-card-hover); }
+.day-i.active { background: var(--accent-subtle); border-left-color: var(--accent); }
+.day-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; color: var(--text-muted); transition: var(--transition); }
+.day-i.completed .day-dot { background: var(--accent); border-color: var(--accent); color: #000; }
+.day-i.active .day-dot { border-color: var(--accent); color: var(--accent); }
+.day-i.not-started .day-dot { border-color: var(--border); color: var(--text-muted); }
+.day-m { flex: 1; min-width: 0; }
+.day-m .t { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-m .s { font-size: 10px; color: var(--text-muted); margin-top: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-sd { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.day-i.completed .day-sd { background: var(--accent); }
+.day-i.active .day-sd { background: var(--warning); }
+.day-i.not-started .day-sd { background: var(--text-muted); }
 
-/* ═══════════════════════════════════════════════
-   DETAIL PANEL
-   ═══════════════════════════════════════════════ */
-.detail-panel { flex: 1; overflow-y: auto; }
-.detail-inner { max-width: 760px; margin: 0 auto; padding: 36px 40px 80px; }
-
-.empty-state {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; height: 100%; color: var(--text-muted);
-  text-align: center; gap: 10px;
-}
-.empty-state .icon { font-size: 42px; opacity: 0.25; }
+/* ── MAIN PANEL ── */
+.panel { flex: 1; overflow-y: auto; padding: 28px 36px; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; gap: 8px; }
+.empty-state .ei { font-size: 40px; opacity: 0.2; }
 .empty-state h3 { font-size: 16px; color: var(--text-secondary); font-weight: 500; }
 .empty-state p { font-size: 13px; max-width: 320px; }
 
-/* ═══════════════════════════════════════════════
-   STEP FLOW
-   ═══════════════════════════════════════════════ */
-.steps { display: flex; gap: 4px; margin-bottom: 28px; }
-.step {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm);
-  font-size: 11px; font-weight: 500; color: var(--text-muted);
-  background: var(--bg-card); border: 1px solid var(--border);
-  transition: var(--transition);
-}
-.step.active { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
-.step.done { color: var(--text-primary); border-color: var(--accent-dim); background: var(--accent-glow); }
-.step .step-num {
-  width: 18px; height: 18px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 700; flex-shrink: 0;
-  background: var(--border); color: var(--text-muted);
-}
-.step.active .step-num { background: var(--accent); color: #000; }
-.step.done .step-num { background: var(--accent-dim); color: #fff; }
+/* ── DAY DETAIL ── */
+.dd { animation: fIn 350ms var(--ease-out); }
+@keyframes fIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.dh { margin-bottom: 24px; }
+.db { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.dh h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 4px; }
+.dh .ft { font-size: 14px; color: var(--text-secondary); }
+.dw { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.dw strong { color: var(--accent); font-weight: 600; }
 
-/* ═══════════════════════════════════════════════
-   DAY HEADER
-   ═══════════════════════════════════════════════ */
-.day-header { margin-bottom: 24px; }
-.day-breadcrumb { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-.day-header h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 4px; }
-.day-header .focus-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+/* ── STEP SECTIONS ── */
+.step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; }
+.step-h { display: flex; align-items: center; gap: 10px; padding: 14px 18px; cursor: pointer; user-select: none; transition: var(--transition); }
+.step-h:hover { background: var(--bg-card-hover); }
+.step-h .si { font-size: 15px; width: 22px; text-align: center; flex-shrink: 0; }
+.step-h h3 { font-size: 13px; font-weight: 600; flex: 1; }
+.step-h .st { font-size: 10px; color: var(--text-muted); background: var(--border); padding: 1px 8px; border-radius: 4px; font-weight: 500; }
+.step-h .ch { font-size: 11px; color: var(--text-muted); transition: transform var(--transition); }
+.step.open .step-h .ch { transform: rotate(90deg); }
+.step-b { max-height: 0; overflow: hidden; transition: max-height 400ms ease, padding 400ms ease; padding: 0 18px; }
+.step.open .step-b { max-height: 2000px; padding: 0 18px 18px; }
+.step-b p, .step-b li { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+.step-b p { margin-bottom: 10px; }
+.step-b p:last-child { margin-bottom: 0; }
 
-/* ═══════════════════════════════════════════════
-   EXPLANATION — THE LESSON
-   ═══════════════════════════════════════════════ */
-.explanation { margin-bottom: 32px; }
-.explanation .lesson-section { margin-bottom: 24px; }
-.explanation h4 {
-  font-size: 14px; font-weight: 600; color: var(--text-primary);
-  margin-bottom: 8px; letter-spacing: -0.01em;
-}
-.explanation p {
-  font-size: 14px; color: var(--text-secondary); line-height: 1.7;
-  margin-bottom: 12px;
-}
-.explanation p:last-child { margin-bottom: 0; }
-.explanation code {
-  font-family: var(--font-mono); font-size: 13px;
-  background: var(--bg-elevated); padding: 1px 6px;
-  border-radius: 3px; color: var(--accent);
-}
-.explanation .code-block {
-  background: var(--bg-code); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 14px 18px;
-  font-family: var(--font-mono); font-size: 13px; line-height: 1.6;
-  overflow-x: auto; margin: 10px 0 16px; color: var(--text-primary);
-  white-space: pre;
-}
-.explanation .code-block .kw { color: #7dd3fc; }
-.explanation .code-block .str { color: #86efac; }
-.explanation .code-block .cm { color: var(--text-muted); font-style: italic; }
-.explanation .code-block .fn { color: #fbbf24; }
-.explanation .code-block .num { color: #f472b6; }
-.explanation .highlight-box {
-  background: var(--accent-glow); border-left: 3px solid var(--accent);
-  padding: 14px 18px; border-radius: var(--radius-sm); margin: 12px 0;
-  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
-}
-.explanation .highlight-box strong { color: var(--accent); }
+/* Lesson explanation */
+.lesson-text { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+.lesson-text p { margin-bottom: 10px; }
+.lesson-text p:last-child { margin-bottom: 0; }
+.lesson-text code { background: var(--border); padding: 1px 6px; border-radius: 3px; font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+.lesson-text pre { background: #0d0d0f; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; font-family: var(--font-mono); font-size: 12px; overflow-x: auto; margin: 10px 0; color: #e4e4e7; line-height: 1.5; }
+[data-theme="light"] .lesson-text pre { background: #f0f0f1; color: #18181b; }
+.lesson-text pre .kw { color: #c084fc; }
+.lesson-text pre .fn { color: #22d379; }
+.lesson-text pre .str { color: #f59e0b; }
+.lesson-text pre .cm { color: #71717a; font-style: italic; }
+.lesson-text pre .num { color: #60a5fa; }
+[data-theme="light"] .lesson-text pre .kw { color: #7c3aed; }
+[data-theme="light"] .lesson-text pre .fn { color: #16a34a; }
+[data-theme="light"] .lesson-text pre .str { color: #d97706; }
+[data-theme="light"] .lesson-text pre .num { color: #2563eb; }
 
-/* ═══════════════════════════════════════════════
-   SECTION CARDS (quiz, tasks, test, status)
-   ═══════════════════════════════════════════════ */
-.section-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden;
-}
-.section-card-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px 18px; cursor: pointer; user-select: none; transition: var(--transition);
-}
-.section-card-header:hover { background: var(--bg-card-hover); }
-.section-card-header .icon { font-size: 14px; width: 22px; text-align: center; flex-shrink: 0; }
-.section-card-header h3 { font-size: 13px; font-weight: 600; flex: 1; }
-.section-card-header .chevron { font-size: 11px; color: var(--text-muted); transition: transform var(--transition); }
-.section-card.open .section-card-header .chevron { transform: rotate(90deg); }
-.section-card-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height 350ms ease, padding 350ms ease;
-  padding: 0 18px;
-}
-.section-card.open .section-card-body {
-  max-height: 1200px; padding: 0 18px 18px;
-}
+/* File path */
+.fp { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 12px; font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+.fp .pt { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cb { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 11px; transition: var(--transition); font-family: var(--font-sans); }
+.cb:hover { color: var(--accent); background: var(--accent-glow); }
 
-.file-path, .test-command {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 8px 12px;
-  font-family: var(--font-mono); font-size: 12px;
-}
-.file-path { color: var(--text-secondary); }
-.test-command { color: var(--accent); }
-.file-path .path-text, .test-command .cmd-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.copy-btn {
-  background: none; border: none; color: var(--text-muted); cursor: pointer;
-  padding: 3px 8px; border-radius: 4px; font-size: 11px;
-  transition: var(--transition); font-family: var(--font-sans);
-}
-.copy-btn:hover { color: var(--accent); background: var(--accent-glow); }
+/* Test command */
+.tc { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 12px; font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+.tc .ct { flex: 1; }
 
-.quiz-questions { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.quiz-questions li {
-  padding: 8px 12px; background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); line-height: 1.5;
-}
-.quiz-questions li .q-num { color: var(--accent); font-weight: 600; margin-right: 4px; }
+/* Task list */
+.tasks { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.tasks li { padding: 7px 12px; background: var(--bg); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); border-left: 2px solid var(--accent); line-height: 1.5; }
 
-.status-controls { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding-top: 6px; }
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
-  background: var(--bg); color: var(--text-secondary); font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: var(--transition); font-family: var(--font-sans);
-}
-.btn:hover { border-color: var(--border-accent); color: var(--text-primary); background: var(--bg-card-hover); }
-.btn-primary { background: var(--accent); border-color: var(--accent); color: #000; }
-.btn-primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); color: #000; }
-.btn-primary.active { background: var(--accent-dim); border-color: var(--accent-dim); }
+/* Quiz */
+.ql { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ql li { padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.ql li .qn { color: var(--accent); font-weight: 600; margin-right: 4px; }
 
-.confidence-group { display: flex; align-items: center; gap: 6px; }
-.confidence-group label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
-.confidence-stars { display: flex; gap: 3px; }
-.star-btn {
-  background: none; border: none; font-size: 16px; cursor: pointer;
-  color: var(--border); padding: 2px; transition: var(--transition); line-height: 1;
-}
-.star-btn.filled { color: var(--warning); }
-.star-btn:hover { transform: scale(1.15); }
+/* Status */
+.sc { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; transition: var(--transition); font-family: var(--font-sans); }
+.btn:hover { border-color: var(--border-light); color: var(--text-primary); background: var(--bg-card-hover); }
+.btn-p { background: var(--accent); border-color: var(--accent); color: #000; }
+.btn-p:hover { background: var(--accent-dim); border-color: var(--accent-dim); }
+.btn-p.active { background: var(--accent-dim); }
+.cg { display: flex; align-items: center; gap: 6px; }
+.cg label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.cs { display: flex; gap: 3px; }
+.sb { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--border); padding: 1px; transition: var(--transition); line-height: 1; }
+.sb.fl { color: var(--warning); }
+.sb:hover { transform: scale(1.2); }
+.ng { margin-top: 10px; }
+.ng textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-primary); font-family: var(--font-sans); font-size: 12px; resize: vertical; min-height: 50px; transition: var(--transition); }
+.ng textarea:focus { outline: none; border-color: var(--accent); }
 
-.notes-group { margin-top: 10px; }
-.notes-group textarea {
-  width: 100%; background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-primary);
-  font-family: var(--font-sans); font-size: 12px; resize: vertical;
-  min-height: 50px; transition: var(--transition);
-}
-.notes-group textarea:focus { outline: none; border-color: var(--accent); }
-
-/* ═══════════════════════════════════════════════
-   ANIMATION
-   ═══════════════════════════════════════════════ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.day-detail { animation: fadeUp 300ms ease; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.fade-in { animation: fadeIn 400ms ease both; }
-
-/* ═══════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════ */
+/* Responsive */
 @media (max-width: 768px) {
-  header { padding: 14px 16px; }
-  .app-container { flex-direction: column; }
+  header { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
+  .app { flex-direction: column; }
   .sidebar { width: 100%; min-width: 0; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
-  .detail-inner { padding: 20px; }
-  .day-header h2 { font-size: 20px; }
-  .steps { flex-wrap: wrap; }
-  .steps .step { font-size: 10px; padding: 6px 8px; }
+  .panel { padding: 18px; }
+  .dh h2 { font-size: 20px; }
+  .sc { flex-direction: column; align-items: stretch; }
 }
 </style>
 </head>
@@ -335,698 +198,1166 @@ header {
     <div class="logo">DM</div>
     <div class="header-title">
       <h1>DocuMind</h1>
-      <p>AI Document Processing Pipeline · 28-Day Grind</p>
+      <p>AI Document Processing · 28-Day Project</p>
     </div>
   </div>
   <div class="header-right">
-    <div class="header-stat">
-      <div class="number" id="headerCompleted">0</div>
-      <div class="label">Done</div>
-    </div>
-    <div class="header-stat">
-      <div class="number" id="headerStreak">0</div>
-      <div class="label">Streak</div>
-    </div>
-    <button class="theme-toggle" id="themeToggle" title="Toggle theme">☀️</button>
+    <div class="header-stat"><div class="num" id="hDone">0</div><div class="lbl">Done</div></div>
+    <div class="header-stat"><div class="num" id="hStreak">0</div><div class="lbl">Streak</div></div>
+    <button class="theme-btn" id="themeBtn">☀️</button>
   </div>
 </header>
 
-<div class="app-container">
-  <!-- SIDEBAR -->
+<div class="app">
   <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">
+    <div class="sidebar-head">
       <h2>Curriculum</h2>
-      <div class="progress-bar"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-text" id="progressText">0 / 28 days</div>
+      <div class="pbar"><div class="pbar-fill" id="pf" style="width:0%"></div></div>
+      <div class="ptext" id="pt">0 / 28 days</div>
     </div>
-    <div class="timeline-weeks" id="timeline"></div>
+    <div class="tl-weeks" id="tl"></div>
   </nav>
 
-  <!-- DETAIL -->
-  <main class="detail-panel" id="detailPanel">
+  <main class="panel" id="panel">
     <div class="empty-state">
-      <div class="icon">📄</div>
-      <h3>Select a day from the timeline</h3>
-      <p>Click any day to read the lesson, then work through quiz, tasks, and test.</p>
+      <div class="ei">📄</div>
+      <h3>Pick a day to start</h3>
+      <p>Each day: learn the concept, answer the quiz, write the code, pass the test.</p>
     </div>
   </main>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// CURRICULUM DATA — each day has lesson content rendered first
-// ══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// CURRICULUM DATA — All 28 Days Fully Loaded
+// ═══════════════════════════════════════════════════════════════
 
-const LESSONS = {
-  // ────────── Week 1 ──────────
-  1: {
-    sections: [
-      {
-        heading: "What is a Class?",
-        body: `A class is a blueprint for creating objects. Think of it like a factory — the class defines WHAT each object looks like and WHAT it can do. Every object you create from that class gets its own copy of the data but shares the same structure.
+const LESSONS = [
+  // ──── WEEK 1: OOP FOUNDATION ────
+  {
+    week:1, day:1, topic:"Document Class", focus:"Blueprint, self, constructor", why:"Every ML model you'll ever use (PyTorch nn.Module, sklearn estimators) is an instance of a class. Before you can build a document pipeline, you need to understand what a class is and how to stamp out objects.",
+    lesson:`<p>A <strong>class</strong> is a blueprint. An <strong>object</strong> (or <em>instance</em>) is a concrete stamp from that blueprint. Think of a class like a cookie cutter and objects like the cookies themselves.</p>
+<p>The method <code>__init__</code> runs automatically when you create an instance. Its first parameter is always <code>self</code> — the object being created. Through <code>self</code>, you attach data to the instance.</p>
+<pre><span class="kw">class</span> <span class="fn">Document</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, content, doc_type=<span class="str">"text"</span>, metadata=<span class="kw">None</span>):
+        <span class="kw">self</span>.content = content
+        <span class="kw">self</span>.doc_type = doc_type
+        <span class="kw">self</span>.metadata = metadata <span class="kw">or</span> {}
 
-  In Python, you define a class with the class keyword, and the __init__ method runs automatically when you create a new instance. That first parameter, self, refers to the specific object being created — it's how you attach data to "this particular instance."`
-      },
-      {
-        heading: "The Document Blueprint",
-        body: `Your first task is to build a Document class. A document has:
-  • content — the text/string it holds
-  • doc_type — what kind (text, json, csv)
-  • metadata — extra info as a dictionary
-
-  The class encapsulates these three pieces of data and provides methods to work with them. This is the foundation of OOP: data + behavior bundled together.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `class Document:
-    def __init__(self, content, doc_type='text', metadata=None):
-        # self is the instance being created
-        # store everything on self so methods can access it
-        pass`,
-        highlight: null
-      },
-      {
-        heading: "What You'll Build",
-        body: `You'll fill in __init__ to store the three parameters, then add char_count() and word_count() methods that operate on self.content. This is your first real OOP code — every future day builds on this class.`
-      }
+    <span class="kw">def</span> <span class="fn">char_count</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="built_in">len</span>(<span class="kw">self</span>.content)</pre>
+<p>Notice <code>metadata=None</code> with a fallback — never use mutable defaults like <code>metadata={}</code> directly in the signature. That's a classic Python gotcha: all instances would share the same dict.</p>
+<p>Your job: fill in the TODO stubs in <code>document.py</code> so the Document class stores content, doc_type, and metadata, and exposes <code>char_count()</code> and <code>word_count()</code>.</p>`,
+    path:"src/documind/core/document.py", section:"DAY 1", test:"tests/test_day1.py",
+    quiz:[
+      "What does 'self' refer to inside a Python method?",
+      "What happens inside __init__ when a class is instantiated?",
+      "Can a class have multiple instances? How does each maintain its own state?",
+      "What is the difference between a class and an object?",
+      "Why should you avoid mutable default arguments like metadata={}?"
+    ],
+    tasks:[
+      "Define class Document with __init__(self, content, doc_type, metadata)",
+      "Implement char_count() returning len(self.content)",
+      "Implement word_count() returning len(self.content.split())",
+      "Set defaults: doc_type='text', metadata=None (with {} fallback)"
     ]
   },
-  2: {
-    sections: [
-      {
-        heading: "Class Attributes vs Instance Attributes",
-        body: `Instance attributes (set via self.xxx) belong to one object. If you have 10 documents, each has its own .content, .doc_type, .metadata. Change one, the others stay untouched.
+  {
+    week:1, day:2, topic:"Class Attributes & Factory", focus:"Shared state, classmethods, properties", why:"Some data belongs to the class itself, not any single instance. A counter that tracks all documents ever created, or a factory method that standardizes how documents are built.",
+    lesson:`<p><strong>Class attributes</strong> live on the class, not on instances. Every instance sees the same value unless it's shadowed. Use them for shared counters, allowed types, or configuration.</p>
+<pre><span class="kw">class</span> <span class="fn">Document</span>:
+    counter = <span class="num">0</span>
+    allowed_types = {<span class="str">"text"</span>, <span class="str">"json"</span>, <span class="str">"csv"</span>}
 
-  Class attributes are set directly on the class itself — not on self. They're shared by every instance. This is perfect for things like a counter that tracks every document ever created, or a list of allowed document types that should be the same for all documents.`
-      },
-      {
-        heading: "The Factory Pattern with @classmethod",
-        body: `A classmethod receives the class (cls) instead of the instance (self). You call it directly on the class, like Document.from_json(data). This is called a factory method — it creates and returns a new instance using different input than the normal constructor.
-
-  You also use @property to create computed attributes — they look like regular attributes but run a method under the hood. Handy for things like size_kb that calculate from self.content.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `class Document:
-    counter = 0                 # class attribute — shared
-    allowed_types = {'text', 'json', 'csv'}
-
-    def __init__(self, content, doc_type='text', metadata=None):
-        Document.counter += 1   # counts every instance
-    
-    @classmethod
-    def from_json(cls, data):
-        # cls is Document, not an instance
-        parsed = json.loads(data)
-        return cls(parsed['content'], 'json', parsed.get('metadata'))
-    
-    @property
-    def size_kb(self):
-        return len(self.content) / 1024`,
-        highlight: null
-      }
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, content, doc_type=<span class="str">"text"</span>):
+        Document.counter += <span class="num">1</span>
+        <span class="kw">self</span>.id = Document.counter
+        <span class="kw">self</span>.content = content</pre>
+<p>A <strong>classmethod</strong> (<code>@classmethod</code>) receives the class (<code>cls</code>) instead of the instance. It's the classic <em>factory</em> pattern: an alternate constructor.</p>
+<pre>    <span class="meta">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">from_json</span>(<span class="kw">cls</span>, json_str):
+        data = json.loads(json_str)
+        <span class="kw">return</span> <span class="kw">cls</span>(data[<span class="str">"content"</span>], data[<span class="str">"doc_type"</span>])</pre>
+<p>A <strong>property</strong> (<code>@property</code>) lets you define a method that looks like an attribute. Use it for computed values.</p>
+<pre>    <span class="meta">@property</span>
+    <span class="kw">def</span> <span class="fn">size_kb</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="built_in">round</span>(<span class="built_in">len</span>(<span class="kw">self</span>.content) / <span class="num">1024</span>, <span class="num">2</span>)</pre>`,
+    path:"src/documind/core/document.py", section:"DAY 2", test:"tests/test_day2.py",
+    quiz:[
+      "What is the difference between a class attribute and an instance attribute?",
+      "How does a @classmethod differ from a regular method?",
+      "What is a @property and when would you use it?",
+      "How does the factory pattern (from_json) help create objects?",
+      "Why would you increment a counter on each instantiation?"
+    ],
+    tasks:[
+      "Add class attributes: counter (int) and allowed_types (set)",
+      "Implement from_json() classmethod factory that parses JSON string",
+      "Add size_kb property returning len(content)//1024",
+      "Increment counter in __init__ and assign self.id"
     ]
   },
-  3: {
-    sections: [
-      {
-        heading: "Making Objects Readable",
-        body: `When you print() a Python object, you get something like <__main__.Document object at 0x...>. Not helpful. The dunder (double-underscore) methods __repr__ and __str__ fix this.
+  {
+    week:1, day:3, topic:"Dunder Methods I", focus:"__repr__, __str__, __len__, __eq__", why:"Dunder methods give your objects the same ergonomics as built-in types. Want to len(my_doc)? Want to print it and see useful info? Want two documents to compare by value? That's all dunders.",
+    lesson:`<p><strong>Dunder</strong> (double underscore) methods let your objects behave like Python built-ins. They're called implicitly by Python syntax — you never call <code>x.__len__()</code> directly; you call <code>len(x)</code> and Python does the rest.</p>
+<pre><span class="kw">def</span> <span class="fn">__repr__</span>(<span class="kw">self</span>):
+    <span class="kw">return</span> <span class="str">f"Document(type='{self.doc_type}', chars={len(self.content)})"</span>
 
-  • __repr__ is the "official" string representation — it should look like a valid Python expression that could recreate the object. Used by the REPL and debugging tools.
-  • __str__ is the "pretty" version — what print() and str() show. Make it human-readable.
-  • __len__ makes len(doc) work. Return the character count.
-  • __eq__ defines what "equal" means for your objects. Compare content + doc_type.`
-      },
-      {
-        heading: "Why This Matters",
-        body: `Every serious Python library uses dunder methods. PyTorch modules implement __repr__ for debugging. Django models use __str__ for the admin panel. len() works on lists, strings, and now your documents — because they all implement __len__.
+<span class="kw">def</span> <span class="fn">__str__</span>(<span class="kw">self</span>):
+    <span class="kw">return</span> <span class="str">f"Doc #{self.id}: {self.content[:80]}..."</span>
 
-  When you master __eq__, you can put your documents in sets, use them as dict keys, or compare them meaningfully in tests.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `class Document:
-    def __repr__(self):
-        return f"Document(type='{self.doc_type}', chars={len(self.content)})"
-    
-    def __str__(self):
-        return self.content[:80] + '...' if len(self.content) > 80 else self.content
-    
-    def __len__(self):
-        return len(self.content)
-    
-    def __eq__(self, other):
-        if not isinstance(other, Document):
-            return NotImplemented
-        return self.content == other.content and self.doc_type == other.doc_type`,
-        highlight: null
-      }
+<span class="kw">def</span> <span class="fn">__len__</span>(<span class="kw">self</span>):
+    <span class="kw">return</span> <span class="built_in">len</span>(<span class="kw">self</span>.content)
+
+<span class="kw">def</span> <span class="fn">__eq__</span>(<span class="kw">self</span>, other):
+    <span class="kw">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(other, Document):
+        <span class="kw">return</span> <span class="built_in">NotImplemented</span>
+    <span class="kw">return</span> <span class="kw">self</span>.content == other.content <span class="keyword">and</span> <span class="kw">self</span>.doc_type == other.doc_type</pre>
+<p><code>__repr__</code> is for developers (unambiguous). <code>__str__</code> is for users (readable). <code>__len__</code> is called by <code>len()</code>. <code>__eq__</code> is called by <code>==</code>. Always return <code>NotImplemented</code> (not <code>False</code>) when comparing with an incompatible type — this lets the other object try.</p>`,
+    path:"src/documind/core/document.py", section:"DAY 3", test:"tests/test_day3.py",
+    quiz:[
+      "What does __repr__ return and who calls it?",
+      "How does __str__ differ from __repr__?",
+      "What must __len__ return? What happens if it returns a non-integer?",
+      "How does __eq__ allow custom equality comparison?",
+      "Which dunder method is called by print()?"
+    ],
+    tasks:[
+      "Implement __repr__ returning 'Document(type=X, chars=N)'",
+      "Implement __str__ with first 80 chars + ellipsis",
+      "Implement __len__ returning len(self.content)",
+      "Implement __eq__ comparing content + doc_type"
     ]
   },
-  4: {
-    sections: [
-      {
-        heading: "Callable Objects & Context Managers",
-        body: `Three powerful dunder methods that make objects behave like built-in Python constructs:
+  {
+    week:1, day:4, topic:"Dunder Methods II", focus:"__call__, __enter__/__exit__, __add__", why:"Making objects callable (__call__) lets you use them like functions. Context managers (__enter__/__exit__) are how 'with open()' works. Operator overloading (__add__) makes your types feel native.",
+    lesson:`<p><code>__call__</code> makes an instance callable like a function. This is how PyTorch model layers work: <code>layer(x)</code> calls <code>__call__</code> internally.</p>
+<pre><span class="kw">def</span> <span class="fn">__call__</span>(<span class="kw">self</span>, prefix=<span class="str">""</span>):
+    <span class="kw">return</span> <span class="str">f"{prefix}{self.content}"</span></pre>
+<p>Context managers handle setup/teardown. <code>__enter__</code> runs when the <code>with</code> block starts; <code>__exit__</code> runs when it ends (even if an exception occurs).</p>
+<pre><span class="kw">def</span> <span class="fn">__enter__</span>(<span class="kw">self</span>):
+    <span class="built_in">print</span>(<span class="str">f"[OPEN] {self.id}"</span>)
+    <span class="kw">return</span> <span class="kw">self</span>
 
-  • __call__ — makes an instance callable like a function. doc('processed: ') returns 'processed: <content>'. PyTorch models use this — model(x) calls __call__ internally.
-  • __enter__/__exit__ — enables the with statement. with doc as d: ... When the block exits, __exit__ runs even if an error occurred. Great for setup/teardown patterns.
-  • __add__ — lets you concatenate two documents with +. doc1 + doc2 returns a new Document with combined content.`
-      },
-      {
-        heading: "Real-World Parallels",
-        body: `• model(x) in PyTorch — __call__
-  • json.load(open('file.json')) — file objects use __enter__/__exit__
-  • 'hello' + ' world' — strings use __add__
-  • Your Document class will support all three, making it feel like a built-in Python type.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `class Document:
-    def __call__(self, prefix=''):
-        return prefix + self.content
-    
-    def __enter__(self):
-        print(f"Opening {self.doc_type} document...")
-        return self
-    
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        print(f"Closing {self.doc_type} document...")
-    
-    def __add__(self, other):
-        combined = self.content + '\\n' + other.content
-        return Document(combined, 'text', {
-            'sources': [self.metadata, other.metadata]
-        })`,
-        highlight: null
-      }
+<span class="kw">def</span> <span class="fn">__exit__</span>(<span class="kw">self</span>, exc_type, exc_val, exc_tb):
+    <span class="built_in">print</span>(<span class="str">f"[CLOSE] {self.id}"</span>)</pre>
+<p><code>__add__</code> lets you use <code>+</code> operator between your objects.</p>
+<pre><span class="kw">def</span> <span class="fn">__add__</span>(<span class="kw">self</span>, other):
+    combined = <span class="kw">self</span>.content + <span class="str">"
+"</span> + other.content
+    <span class="kw">return</span> Document(combined)</pre>`,
+    path:"src/documind/core/document.py", section:"DAY 4", test:"tests/test_day4.py",
+    quiz:[
+      "What makes an object 'callable' in Python?",
+      "What does __enter__ return and where does that value go?",
+      "When is __exit__ called and what happens if it returns True?",
+      "What does __add__ allow you to overload?",
+      "Why implement __call__ instead of a regular method?"
+    ],
+    tasks:[
+      "Implement __call__(prefix='') concatenating prefix + content",
+      "Implement __enter__ (print + return self) and __exit__ (print close)",
+      "Implement __add__ merging two documents with newline separator",
+      "Verify all dunders work in pytest"
     ]
   },
-  5: {
-    sections: [
-      {
-        heading: "Inheritance — The Parent-Child Pattern",
-        body: `Inheritance lets you create a base class with shared logic, then extend it in subclasses. The child class gets everything from the parent automatically — methods, attributes, everything. You only write what's different.
+  {
+    week:1, day:5, topic:"Inheritance & Subclasses", focus:"BaseDocument → TextDocument, JSONDocument, CSVDocument", why:"Inheritance is the backbone of every framework. You define a base interface (like nn.Module), then subclass it with specific behavior. Each subclass customizes process() differently.",
+    lesson:`<p><strong>Inheritance</strong> lets one class derive from another. The child gets all parent methods and can override what it needs to change.</p>
+<pre><span class="kw">class</span> <span class="fn">BaseDocument</span>:
+    <span class="kw">def</span> <span class="fn">process</span>(<span class="kw">self</span>):
+        <span class="kw">raise</span> <span class="built_in">NotImplementedError</span>
 
-  Your BaseDocument is the parent. It defines the contract: every document must have a process() method. TextDocument, JSONDocument, and CSVDocument are children. Each implements process() differently — that's polymorphism in action.`
-      },
-      {
-        heading: "The Base Contract",
-        body: `By making process() raise NotImplementedError in the base class, you enforce that every child MUST implement it. Try to create a child without process() — Python errors at runtime when you call it. This is a design contract.
-
-  TextDocument.process() uppercases the content.
-  JSONDocument.process() pretty-prints JSON.
-  CSVDocument.process() returns header + first row.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `class BaseDocument:
-    def __init__(self, content):
-        self.content = content
-    
-    def process(self):
-        raise NotImplementedError
-    
-class TextDocument(BaseDocument):
-    def process(self):
-        return self.content.upper()
-
-class JSONDocument(BaseDocument):
-    def process(self):
-        data = json.loads(self.content)
-        return json.dumps(data, indent=2)`,
-        highlight: null
-      }
+<span class="kw">class</span> <span class="fn">TextDocument</span>(BaseDocument):
+    <span class="kw">def</span> <span class="fn">process</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="kw">self</span>.content.upper()</pre>
+<p><code>isinstance()</code> checks the inheritance chain — <code>isinstance(TextDocument(), BaseDocument)</code> returns <code>True</code>. This is what enables <strong>polymorphism</strong>: code written against <code>BaseDocument</code> works with any subclass.</p>
+<p>Override <code>__repr__</code> in each subclass to identify itself. Use <code>super().__init__()</code> to reuse the parent constructor.</p>`,
+    path:"src/documind/core/processors.py", section:"DAY 5", test:"tests/test_day5.py",
+    quiz:[
+      "What is inheritance and how does a child access parent methods?",
+      "How do you define a method that subclasses MUST override?",
+      "What happens if a child doesn't implement a parent's method?",
+      "How does isinstance() work with inheritance?",
+      "Why use inheritance over copying code into each class?"
+    ],
+    tasks:[
+      "Define base class BaseDocument with process() raising NotImplementedError",
+      "Implement TextDocument.process() returning uppercase content",
+      "Implement JSONDocument.process() returning parsed JSON",
+      "Implement CSVDocument.process() returning header + col count"
     ]
   },
-  6: {
-    sections: [
-      {
-        heading: "Abstract Base Classes (ABC)",
-        body: `ABCs are stricter than raising NotImplementedError. With Python's abc module, the base class can PREVENT you from instantiating a child that hasn't implemented the abstract methods. The error happens at construction time, not later when you call the method.
+  {
+    week:1, day:6, topic:"Abstract Classes & Override", focus:"ABC, abstractmethod, super(), validation contracts", why:"Raising NotImplementedError is a runtime signal. ABC gives you a compile-time guarantee: you CANNOT instantiate a subclass that hasn't implemented every abstract method. This is how real frameworks enforce contracts.",
+    lesson:`<p>Python's <code>abc</code> module (Abstract Base Classes) enforces that subclasses implement certain methods. If they don't, instantiation fails immediately — no runtime surprises.</p>
+<pre><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
 
-  You use @abstractmethod to mark methods that children MUST override. Then you add super() calls so children can extend — not replace — the parent's logic.`
-      },
-      {
-        heading: "The Validation Layer",
-        body: `Today you add validate() as an abstract method. Each subclass must implement its own validation:
-  • TextValidator — checks content is non-empty
-  • JSONValidator — checks content parses as valid JSON
+<span class="kw">class</span> <span class="fn">AbstractDocument</span>(ABC):
+    <span class="meta">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">process</span>(<span class="kw">self</span>): ...
 
-  This is the pattern used by frameworks like Django REST Framework and Pydantic — define validation rules per type.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `from abc import ABC, abstractmethod
-
-class BaseDocument(ABC):
-    def process(self):
-        validated = self.validate()
-        if not validated:
-            raise ValueError("Validation failed")
-        return self._process_impl()
-    
-    @abstractmethod
-    def validate(self):
-        pass
-
-class TextDocument(BaseDocument):
-    def validate(self):
-        return bool(self.content.strip())`,
-        highlight: 'The @abstractmethod decorator forces every child to implement validate(). If you forget, instantiation fails immediately.'
-      }
+    <span class="meta">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">validate</span>(<span class="kw">self</span>): ...</pre>
+<p>Use <code>super()</code> to call the parent's implementation from the child. This is essential when the parent does setup work (like incrementing a counter) that the child must preserve.</p>
+<pre><span class="kw">class</span> <span class="fn">TextValidator</span>(AbstractDocument):
+    <span class="kw">def</span> <span class="fn">validate</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="built_in">bool</span>(<span class="kw">self</span>.content.strip())</pre>
+<p>Notice <code>...</code> (Ellipsis) as the body — a clean idiom for abstract method stubs.</p>`,
+    path:"src/documind/core/processors.py", section:"DAY 6", test:"tests/test_day6.py",
+    quiz:[
+      "What does super() do inside an overridden method?",
+      "What is method resolution order (MRO) and how does it work?",
+      "Why use ABC instead of just raising NotImplementedError?",
+      "Can you call the parent's overridden method from the child?",
+      "What does @abstractmethod enforce at instantiation time?"
+    ],
+    tasks:[
+      "Convert BaseDocument to ABC with abstractmethod process()",
+      "Add abstract method validate() to the ABC",
+      "Implement TextValidator (non-empty content check)",
+      "Implement JSONValidator (valid JSON parse check)"
     ]
   },
-  7: {
-    sections: [
-      {
-        heading: "Polymorphism — One Interface, Many Implementations",
-        body: `Polymorphism means "many shapes." In code, it means you can call the same method on different types and get different behavior — without using if/elif chains to check what type something is.
+  {
+    week:1, day:7, topic:"Factory & Polymorphism", focus:"DocumentFactory, chain_process, polymorphic dispatch", why:"A factory centralizes creation logic. Polymorphism means you write code once that works on ANY document type. Add a new type tomorrow — the pipeline works without changes.",
+    lesson:`<p><strong>Factory pattern</strong>: one method that returns the right subclass based on input. Combined with <code>@classmethod</code>, it's clean and self-documenting.</p>
+<pre><span class="kw">class</span> <span class="fn">DocumentFactory</span>:
+    registry = {}
 
-  Your DocumentFactory.create() method takes a string like 'text' and returns the right document type. The caller doesn't care what subclass it gets — it just calls .process() and trusts it works.`
-      },
-      {
-        heading: "The Factory Pattern",
-        body: `A factory centralizes object creation. Instead of writing TextDocument(...) directly everywhere, you call DocumentFactory.create('text', data). This is decoupling — your code depends on the factory, not on concrete classes.
+    <span class="meta">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">register</span>(<span class="kw">cls</span>, doc_type):
+        <span class="kw">def</span> <span class="fn">wrapper</span>(subclass):
+            cls.registry[doc_type] = subclass
+            <span class="kw">return</span> subclass
+        <span class="kw">return</span> wrapper
 
-  When you add a new document type (e.g. MarkdownDocument), you change exactly ONE file: register it in the factory. Zero changes to the code that uses the factory.`
-      },
-      {
-        heading: "Code Pattern",
-        body: null,
-        code: `class DocumentFactory:
-    _registry = {}
-    
-    @classmethod
-    def register(cls, doc_type, doc_class):
-        cls._registry[doc_type] = doc_class
-    
-    @classmethod
-    def create(cls, doc_type, content):
-        doc_class = cls._registry.get(doc_type)
-        if doc_class is None:
-            raise ValueError(f"Unknown type: {doc_type}")
-        return doc_class(content)
+    <span class="meta">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">create</span>(<span class="kw">cls</span>, doc_type, content):
+        subclass = cls.registry.get(doc_type)
+        <span class="kw">if</span> <span class="keyword">not</span> subclass:
+            <span class="kw">raise</span> <span class="built_in">ValueError</span>(<span class="str">f"Unknown type: {doc_type}"</span>)
+        <span class="kw">return</span> subclass(content)</pre>
+<p><strong>Polymorphism</strong>: you call <code>.process()</code> on a list of <code>BaseDocument</code> instances — each runs its own version. No if/elif chain needed.</p>
+<pre><span class="kw">def</span> <span class="fn">chain_process</span>(docs):
+    <span class="kw">return</span> [doc.process() <span class="kw">for</span> doc <span class="kw">in</span> docs]</pre>`,
+    path:"src/documind/core/processors.py", section:"DAY 7", test:"tests/test_day7.py",
+    quiz:[
+      "What is the factory pattern and when is it useful?",
+      "How does a classmethod enable the factory pattern?",
+      "What is polymorphism in the context of chain_process()?",
+      "Why should DocumentFactory.create() return BaseDocument?",
+      "How many files do you change to add a new document type?"
+    ],
+    tasks:[
+      "Implement DocumentFactory with create() classmethod",
+      "Implement list_types() returning available doc types",
+      "Implement chain_process() calling process() on each doc",
+      "Verify polymorphic dispatch works for ALL subclasses"
+    ]
+  },
+  // ──── WEEK 2: DATA STRUCTURES & FLOW ────
+  {
+    week:2, day:1, topic:"Batch Processing w/ Lists", focus:"DocumentCollection — indexing, slicing, appending", why:"Models don't process one row — they process batches. A list of documents is your simplest data structure. Understanding how to index, slice, and iterate efficiently is table stakes for any pipeline.",
+    lesson:`<p>A <strong>list</strong> in Python is a dynamic array. It supports O(1) append, O(n) insert/delete in the middle, and O(1) indexing. For document batching, the list is your workhorse.</p>
+<pre><span class="kw">class</span> <span class="fn">DocumentCollection</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, documents=<span class="kw">None</span>):
+        <span class="kw">self</span>.docs = <span class="built_in">list</span>(documents <span class="kw">or</span> [])
 
-# Later — the pipeline:
-def chain_process(docs):
-    return [doc.process() for doc in docs]
-    # Polymorphism: each doc calls ITS OWN process()`,
-        highlight: null
-      }
+    <span class="kw">def</span> <span class="fn">__getitem__</span>(<span class="kw">self</span>, index):
+        <span class="kw">return</span> <span class="kw">self</span>.docs[index]
+
+    <span class="kw">def</span> <span class="fn">__len__</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="built_in">len</span>(<span class="kw">self</span>.docs)
+
+    <span class="kw">def</span> <span class="fn">add</span>(<span class="kw">self</span>, document):
+        <span class="kw">self</span>.docs.append(document)</pre>
+<p>Notice <code>documents=None</code> + fallback instead of <code>documents=[]</code> — avoids the mutable default trap. <code>__getitem__</code> delegates to the list's own index/slice logic, giving you slicing for free.</p>
+<p>This class wraps a list but gives you a semantic type. You can later add logging, validation, or statistics without changing consuming code.</p>`,
+    path:"src/documind/operations/collection.py", section:"W2D1", test:"tests/test_w2d1.py",
+    quiz:[
+      "What is the time complexity of list.append()?",
+      "Why should you avoid mutable default arguments like documents=[]?",
+      "What does __getitem__ enable on your objects?",
+      "How does slicing work when delegated to a wrapped list?",
+      "Why wrap a list in a custom class instead of using a list directly?"
+    ],
+    tasks:[
+      "Create DocumentCollection with __init__(self, documents=None)",
+      "Implement __getitem__ delegating to self.docs[index]",
+      "Implement __len__ and add() method",
+      "Test with indexing, slicing, and appending"
+    ]
+  },
+  {
+    week:2, day:2, topic:"Filter, Map, Sort", focus:"Comprehensions & built-ins for clean data pipelines", why:"Every pipeline transforms data. List comprehensions, filter(), sorted() — these are your chisels. Master them and your code goes from nested loops to one-liners.",
+    lesson:`<p>List comprehensions are the Pythonic way to map and filter. They're faster than manual for-loops and more readable.</p>
+<pre><span class="cm"># Map: transform every element</span>
+upper_docs = [doc.process() <span class="kw">for</span> doc <span class="kw">in</span> collection]
+
+<span class="cm"># Filter: keep only text documents</span>
+text_docs = [doc <span class="kw">for</span> doc <span class="kw">in</span> collection <span class="kw">if</span> doc.doc_type == <span class="str">"text"</span>]
+
+<span class="cm"># Sort by character count (ascending)</span>
+sorted_docs = <span class="built_in">sorted</span>(collection, key=<span class="kw">lambda</span> d: d.char_count())
+
+<span class="cm"># Chain: filter, then map, then sort</span>
+result = <span class="built_in">sorted</span>(
+    [doc.process() <span class="kw">for</span> doc <span class="kw">in</span> collection <span class="kw">if</span> doc.char_count() > <span class="num">100</span>],
+    key=<span class="kw">lambda</span> x: <span class="built_in">len</span>(x)
+)</pre>
+<p>The <code>key=</code> parameter accepts any callable. Use <code>lambda</code> for simple cases, or a named function when the logic gets complex. For sorting, <code>key=str.lower</code> is a common idiom for case-insensitive ordering.</p>`,
+    path:"src/documind/operations/collection.py", section:"W2D2", test:"tests/test_w2d2.py",
+    quiz:[
+      "What is the syntax for a list comprehension that filters and maps?",
+      "How does key= work in sorted()?",
+      "What is a lambda and when would you use a named function instead?",
+      "How do you sort descending in Python?",
+      "Why are list comprehensions preferred over for-loops for simple transforms?"
+    ],
+    tasks:[
+      "Write comprehension: filter documents by doc_type, then process each",
+      "Implement sorted() with custom key=lambda for char_count",
+      "Chain filter → map → sort in a single expression",
+      "Add methods to DocumentCollection: filter_by_type(), sorted_by_size()"
+    ]
+  },
+  {
+    week:2, day:3, topic:"Copy vs Reference", focus:"Avoid silent mutation bugs in pipelines", why:"Lists are references, not copies. One mutate and every reference sees it. In a pipeline where batches feed into each other, this causes bugs that don't crash — they silently corrupt data.",
+    lesson:`<p>In Python, variables are <strong>references</strong> to objects, not the objects themselves. Two variables can point to the same list; mutating through one affects the other.</p>
+<pre>docs_a = [Document(<span class="str">"hello"</span>)]
+docs_b = docs_a          <span class="cm"># docs_b points to the SAME list</span>
+docs_b.append(Document(<span class="str">"world"</span>))
+<span class="built_in">print</span>(<span class="built_in">len</span>(docs_a))        <span class="cm"># 2 — docs_a changed too!</span></pre>
+<p>To copy, use <code>.copy()</code> (shallow) or <code>copy.deepcopy()</code> (recursive).</p>
+<pre><span class="kw">import</span> copy
+shallow = original.copy()     <span class="cm"># new list, same document refs</span>
+deep    = copy.deepcopy(original)  <span class="cm"># new list, new document refs</span></pre>
+<p><strong>Shallow copy</strong>: the list is new, but the documents inside are still the same objects. Mutating a document inside a shallow copy affects the original. <strong>Deep copy</strong>: everything is new — no shared state.</p>`,
+    path:"src/documind/operations/collection.py", section:"W2D3", test:"tests/test_w2d3.py",
+    quiz:[
+      "What does it mean that Python variables are 'references'?",
+      "How does shallow copy differ from deep copy?",
+      "What is the syntax for creating a shallow copy of a list?",
+      "When would a shallow copy be sufficient? When do you need deep copy?",
+      "What happens if you mutate a document inside a shallow-copied collection?"
+    ],
+    tasks:[
+      "Write code that demonstrates mutation through a second reference",
+      "Add .copy() method to DocumentCollection (shallow)",
+      "Add .deepcopy() method using copy.deepcopy",
+      "Add test verifying mutating deepcopy does NOT affect original"
+    ]
+  },
+  {
+    week:2, day:4, topic:"Config with Dicts", focus:"PipelineConfig — key-value, O(1) lookups, nested access", why:"Every pipeline needs configuration. Dicts are your key-value store — O(1) lookup, flexible nesting, easy serialization. LLM responses come back as JSON dicts; you need to navigate them.",
+    lesson:`<p>A <strong>dict</strong> maps keys to values with O(1) average lookup. Use them for configuration, metadata, and any keyed data.</p>
+<pre><span class="kw">class</span> <span class="fn">PipelineConfig</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, config=<span class="kw">None</span>):
+        <span class="kw">self</span>._data = <span class="built_in">dict</span>(config <span class="kw">or</span> {})
+
+    <span class="kw">def</span> <span class="fn">get</span>(<span class="kw">self</span>, key, default=<span class="kw">None</span>):
+        <span class="kw">return</span> <span class="kw">self</span>._data.get(key, default)
+
+    <span class="kw">def</span> <span class="fn">set</span>(<span class="kw">self</span>, key, value):
+        <span class="kw">self</span>._data[key] = value
+
+    <span class="kw">def</span> <span class="fn">__getitem__</span>(<span class="kw">self</span>, key):
+        <span class="kw">return</span> <span class="kw">self</span>_data[key]</pre>
+<p>Use <code>.get()</code> for safe access (no KeyError). Use bracket notation when you <em>know</em> the key exists. Dicts support nested structures naturally.</p>
+<pre>config = PipelineConfig({<span class="str">"model"</span>: {<span class="str">"temperature"</span>: <span class="num">0.7</span>, <span class="str">"max_tokens"</span>: <span class="num">512</span>}})
+temp = config.get(<span class="str">"model"</span>).get(<span class="str">"temperature"</span>)</pre>`,
+    path:"src/documind/operations/config.py", section:"W2D4", test:"tests/test_w2d4.py",
+    quiz:[
+      "What is the average time complexity of dict lookup?",
+      "How does .get() differ from bracket [] access?",
+      "What happens if you access a missing key with [] vs .get()?",
+      "How do you safely access nested dict values?",
+      "Why use a wrapper class (PipelineConfig) instead of raw dict?"
+    ],
+    tasks:[
+      "Create PipelineConfig class wrapping a dict",
+      "Implement get(key, default=None) and set(key, value)",
+      "Implement __getitem__ and __setitem__ for bracket access",
+      "Add nested_get(keys) method for dot-notation style access"
+    ]
+  },
+  {
+    week:2, day:5, topic:"Deep JSON Parsing", focus:".get(), recursive flatten, safe navigation", why:"Real-world data is nested JSON from APIs. You need to safely extract fields, handle missing keys, and flatten deeply nested structures without littering your code with try/except blocks.",
+    lesson:`<p>Safe navigation through nested JSON requires disciplined usage of <code>.get()</code> and type checking. One missing key shouldn't crash your pipeline.</p>
+<pre><span class="kw">def</span> <span class="fn">safe_get</span>(data, *keys, default=<span class="kw">None</span>):
+    <span class="kw">for</span> key <span class="kw">in</span> keys:
+        <span class="kw">try</span>:
+            data = data[key]
+        <span class="kw">except</span> (<span class="built_in">KeyError</span>, <span class="built_in">TypeError</span>, <span class="built_in">IndexError</span>):
+            <span class="kw">return</span> default
+    <span class="kw">return</span> data
+
+<span class="cm"># Usage: safe_get(response, 'data', 'attributes', 'title')</span></pre>
+<p>Recursive flatten is useful for exploring unknown structures:</p>
+<pre><span class="kw">def</span> <span class="fn">flatten</span>(data, prefix=<span class="str">""</span>):
+    items = []
+    <span class="kw">for</span> k, v <span class="kw">in</span> data.items():
+        key = <span class="str">f"{prefix}.{k}"</span> <span class="kw">if</span> prefix <span class="kw">else</span> k
+        <span class="kw">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">dict</span>):
+            items.extend(flatten(v, key).items())
+        <span class="kw">else</span>:
+            items.append((key, v))
+    <span class="kw">return</span> <span class="built_in">dict</span>(items)</pre>`,
+    path:"src/documind/operations/config.py", section:"W2D5", test:"tests/test_w2d5.py",
+    quiz:[
+      "Why is bracket access risky on unknown JSON structures?",
+      "What does safe_get return when a key is missing?",
+      "What types of exceptions should you catch in safe JSON navigation?",
+      "What is the base case in a recursive flatten function?",
+      "How do you distinguish between a missing key and a None value?"
+    ],
+    tasks:[
+      "Implement safe_get(data, *keys, default=None)",
+      "Implement flatten_dict(data, prefix='') with recursion",
+      "Test safe_get on deeply nested JSON",
+      "Test flatten on a nested LLM response structure"
+    ]
+  },
+  {
+    week:2, day:6, topic:"Big O Profiling", focus:"Profile your pipeline; O(1) vs O(n) vs O(n²)", why:"Your pipeline runs fine on 100 documents. On 10,000 it freezes. Big O tells you why before you hit production. You'll profile your actual collection code today.",
+    lesson:`<p><strong>Big O</strong> describes how runtime scales with input size. Run your pipeline on increasingly large inputs and measure the time — the curve tells you your complexity class.</p>
+<pre><span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="fn">profile</span>(fn, sizes=[<span class="num">100</span>, <span class="num">500</span>, <span class="num">1000</span>, <span class="num">5000</span>]):
+    <span class="kw">for</span> n <span class="kw">in</span> sizes:
+        docs = [Document(<span class="str">"x"</span> * <span class="num">100</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="built_in">range</span>(n)]
+        start = time.perf_counter()
+        fn(docs)
+        elapsed = time.perf_counter() - start
+        <span class="built_in">print</span>(<span class="str">f"n={n}: {elapsed:.4f}s"</span>)</pre>
+<p>Look at the pattern:</p>
+<ul>
+<li><strong>O(1)</strong>: constant time, flat line</li>
+<li><strong>O(n)</strong>: linear, doubles with input</li>
+<li><strong>O(n²)</strong>: quadratic, 4x when input doubles — dangerous</li>
+</ul>
+<p>If your collection's filter method doubles in time when input doubles, it's O(n). If it quadruples, it's O(n²) and needs a rewrite.</p>`,
+    path:"src/documind/operations/collection.py", section:"W2D6", test:"tests/test_w2d6.py",
+    quiz:[
+      "What does O(n) mean in practical terms?",
+      "If an operation takes 1s at n=1000 and 4s at n=2000, what complexity is it?",
+      "Why is O(n²) dangerous for a pipeline?",
+      "What tool/timer do you use to measure runtime in Python?",
+      "How many data points do you need to identify a complexity class?"
+    ],
+    tasks:[
+      "Write profile() function that times operations at different n",
+      "Profile append() on DocumentCollection — verify O(1)",
+      "Profile filter_by_type() — identify its complexity",
+      "Add docstring to every profiled method noting its Big O"
+    ]
+  },
+  {
+    week:2, day:7, topic:"Big O Rewrite", focus:"Rewrite O(n²) → O(n) in your collection code", why:"Knowing you have O(n²) isn't enough. Today you fix it. You'll refactor the slow parts of your pipeline to be O(n) or better, and prove it with profiles.",
+    lesson:`<p>Common O(n²) culprits in data pipelines:</p>
+<ul>
+<li>Nested loops: <code>for a in list: for b in list:</code> → O(n²)</li>
+<li>Repeated <code>in list</code> checks → convert to set for O(1) lookup</li>
+<li><code>.insert(0, x)</code> in a list → O(n) each time, O(n²) total</li>
+</ul>
+<pre><span class="cm"># Before — O(n²)</span>
+<span class="kw">def</span> <span class="fn">deduplicate</span>(docs):
+    seen = []
+    unique = []
+    <span class="kw">for</span> doc <span class="kw">in</span> docs:
+        <span class="kw">if</span> doc <span class="kw">not</span> <span class="kw">in</span> seen:     <span class="cm"># O(n) per check → O(n²)</span>
+            seen.append(doc)
+            unique.append(doc)
+    <span class="kw">return</span> unique
+
+<span class="cm"># After — O(n)</span>
+<span class="kw">def</span> <span class="fn">deduplicate</span>(docs):
+    seen = <span class="built_in">set</span>()
+    unique = []
+    <span class="kw">for</span> doc <span class="kw">in</span> docs:
+        <span class="kw">if</span> doc <span class="kw">not</span> <span class="kw">in</span> seen:     <span class="cm"># O(1) per check → O(n)</span>
+            seen.add(doc)
+            unique.append(doc)
+    <span class="kw">return</span> unique</pre>`,
+    path:"src/documind/operations/collection.py", section:"W2D7", test:"tests/test_w2d7.py",
+    quiz:[
+      "What pattern most commonly causes O(n²) in pipelines?",
+      "How does converting a list to a set change lookup complexity?",
+      "What is the complexity of list.insert(0, x)?",
+      "Why is O(n²) acceptable at small n but deadly at scale?",
+      "What tool proves your rewrite actually improved complexity?"
+    ],
+    tasks:[
+      "Find the O(n²) code in filter_by_type or deduplicate",
+      "Rewrite it to O(n) using set for lookup",
+      "Run profile() before and after — plot the difference",
+      "Commit with message: 'W2D7 — rewrote X from O(n²) to O(n)'"
+    ]
+  },
+  // ──── WEEK 3: COMPLEX STRUCTURES FOR AI AGENTS ────
+  {
+    week:3, day:1, topic:"Processing Queue", focus:"FIFO queue for managing document backlogs", why:"A queue processes things in order — first in, first out. LLM conversation history, job queues, message brokers — all FIFO. Today you build one for document processing.",
+    lesson:`<p>A <strong>queue</strong> is a FIFO (first-in, first-out) data structure. Use <code>collections.deque</code> for O(1) pushes and pops on both ends.</p>
+<pre><span class="kw">from</span> collections <span class="kw">import</span> deque
+
+<span class="kw">class</span> <span class="fn">DocumentQueue</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>._queue = deque()
+
+    <span class="kw">def</span> <span class="fn">enqueue</span>(<span class="kw">self</span>, document):
+        <span class="kw">self</span>._queue.append(document)     <span class="cm"># O(1)</span>
+
+    <span class="kw">def</span> <span class="fn">dequeue</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="kw">self</span>._queue.popleft()       <span class="cm"># O(1)</span>
+
+    <span class="kw">def</span> <span class="fn">__len__</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="built_in">len</span>(<span class="kw">self</span>._queue)</pre>
+<p><code>deque</code> is optimized for fast appends/pops from both ends. A regular list has O(n) pop from the front (all elements shift). For queues, <code>deque</code> is the correct choice.</p>
+<p>Today's code goes in <code>src/documind/orchestration/</code>. This module will grow into your full orchestration layer.</p>`,
+    path:"src/documind/orchestration/queue.py", section:"W3D1", test:"tests/test_w3d1.py",
+    quiz:[
+      "What does FIFO stand for?",
+      "Why use deque over a list for a queue?",
+      "What is the time complexity of deque.popleft()?",
+      "What happens when you dequeue from an empty queue?",
+      "Name a real system that uses FIFO queues."
+    ],
+    tasks:[
+      "Create DocumentQueue using collections.deque",
+      "Implement enqueue(doc) and dequeue() methods",
+      "Implement __len__ and is_empty()",
+      "Test FIFO order with 5 documents"
+    ]
+  },
+  {
+    week:3, day:2, topic:"Priority Queue", focus:"Urgent documents processed first via heapq", why:"Not all documents are equal. Priority queue ensures urgent items get processed first. This is how task schedulers, network routers, and LLM request prioritization work.",
+    lesson:`<p>A <strong>priority queue</strong> always returns the item with the highest priority (lowest numeric value). Python's <code>heapq</code> module implements a min-heap — O(log n) push and pop.</p>
+<pre><span class="kw">import</span> heapq
+
+<span class="kw">class</span> <span class="fn">PriorityDocumentQueue</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>._heap = []
+
+    <span class="kw">def</span> <span class="fn">push</span>(<span class="kw">self</span>, document, priority=<span class="num">5</span>):
+        heapq.heappush(<span class="kw">self</span>._heap, (priority, document))
+
+    <span class="kw">def</span> <span class="fn">pop</span>(<span class="kw">self</span>):
+        priority, document = heapq.heappop(<span class="kw">self</span>._heap)
+        <span class="kw">return</span> document</pre>
+<p>Lower priority number = processed first. Priority 1 documents jump ahead of priority 10. If two items share the same priority, the heap preserves insertion order for those.</p>
+<p>The tuple <code>(priority, doc)</code> works because heapq compares tuples element-wise. If priorities are equal, it compares the second element — which must also be comparable.</p>`,
+    path:"src/documind/orchestration/queue.py", section:"W3D2", test:"tests/test_w3d2.py",
+    quiz:[
+      "What does heapq.heappop() return — the smallest or largest element?",
+      "What is the time complexity of heap push and pop?",
+      "How do you ensure FIFO within the same priority level?",
+      "What happens if you try to pop from an empty heap?",
+      "Why does the tuple (priority, doc) work with heapq?"
+    ],
+    tasks:[
+      "Create PriorityDocumentQueue using heapq",
+      "Implement push(doc, priority=5) and pop() methods",
+      "Ensure FIFO ordering for same-priority items using a counter",
+      "Test: push 3 items at different priorities, verify pop order"
+    ]
+  },
+  {
+    week:3, day:3, topic:"Tree Traversal", focus:"DFS/BFS on a document category hierarchy", why:"Documents belong to categories; categories form a tree. To find all documents under 'Financial Reports' you need tree traversal. DFS and BFS are the two fundamental approaches.",
+    lesson:`<p>A <strong>tree</strong> has nodes with children. Root at the top, leaves at the bottom. Two traversal strategies:</p>
+<ul>
+<li><strong>DFS</strong> (Depth-First): go deep first, then backtrack. Uses a stack (LIFO).</li>
+<li><strong>BFS</strong> (Breadth-First): go level by level. Uses a queue (FIFO).</li>
+</ul>
+<pre><span class="kw">class</span> <span class="fn">CategoryNode</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, name, children=<span class="kw">None</span>):
+        <span class="kw">self</span>.name = name
+        <span class="kw">self</span>.children = <span class="built_in">list</span>(children <span class="kw">or</span> [])
+        <span class="kw">self</span>.documents = []
+
+    <span class="kw">def</span> <span class="fn">dfs</span>(<span class="kw">self</span>):
+        results = [*<span class="kw">self</span>.documents]
+        <span class="kw">for</span> child <span class="kw">in</span> <span class="kw">self</span>.children:
+            results.extend(child.dfs())
+        <span class="kw">return</span> results
+
+    <span class="kw">def</span> <span class="fn">bfs</span>(<span class="kw">self</span>):
+        results = []
+        queue = deque([<span class="kw">self</span>])
+        <span class="kw">while</span> queue:
+            node = queue.popleft()
+            results.extend(node.documents)
+            queue.extend(node.children)
+        <span class="kw">return</span> results</pre>`,
+    path:"src/documind/orchestration/tree.py", section:"W3D3", test:"tests/test_w3d3.py",
+    quiz:[
+      "What data structure does DFS use internally?",
+      "What data structure does BFS use internally?",
+      "DFS visits children in what order?",
+      "BFS visits children in what order?",
+      "Which traversal needs more memory on a wide tree?"
+    ],
+    tasks:[
+      "Create CategoryNode class with name, children, documents",
+      "Implement recursive dfs() returning all documents",
+      "Implement iterative bfs() using deque",
+      "Test both on a 3-level category hierarchy"
+    ]
+  },
+  {
+    week:3, day:4, topic:"Pipeline Routing (Graph)", focus:"Directed graph for multi-stage document routing", why:"A pipeline isn't a straight line — documents may go to different processors based on type. A directed graph models these flows: nodes are processors, edges are transitions.",
+    lesson:`<p>A <strong>graph</strong> is nodes connected by edges. In a directed graph, edges have direction. Model your pipeline stages as nodes, allowed transitions as edges.</p>
+<pre><span class="kw">class</span> <span class="fn">PipelineGraph</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.nodes = {}
+        <span class="kw">self</span>.edges = {}   <span class="cm"># node -> list of (target, condition_fn)</span>
+
+    <span class="kw">def</span> <span class="fn">add_node</span>(<span class="kw">self</span>, name, processor):
+        <span class="kw">self</span>.nodes[name] = processor
+
+    <span class="kw">def</span> <span class="fn">add_edge</span>(<span class="kw">self</span>, source, target, condition=<span class="kw">lambda</span> doc: <span class="built_in">True</span>):
+        <span class="kw">self</span>.edges.setdefault(source, []).append((target, condition))
+
+    <span class="kw">def</span> <span class="fn">route</span>(<span class="kw">self</span>, document, start):
+        path = [start]
+        current = start
+        <span class="kw">while</span> current <span class="kw">in</span> <span class="kw">self</span>.edges:
+            <span class="kw">for</span> target, condition <span class="kw">in</span> <span class="kw">self</span>.edges[current]:
+                <span class="kw">if</span> condition(document):
+                    path.append(target)
+                    current = target
+                    <span class="kw">break</span>
+            <span class="kw">else</span>:
+                <span class="kw">break</span>
+        <span class="kw">return</span> path</pre>`,
+    path:"src/documind/orchestration/graph.py", section:"W3D4", test:"tests/test_w3d4.py",
+    quiz:[
+      "What is a directed graph?",
+      "What do nodes and edges represent in a pipeline graph?",
+      "How does the route() method decide which edge to take?",
+      "What happens if no condition matches at a node?",
+      "How would you detect a cycle in a pipeline graph?"
+    ],
+    tasks:[
+      "Create PipelineGraph with add_node and add_edge methods",
+      "Implement route(doc, start) returning the traversal path",
+      "Add 3 nodes: Ingest → Validate → Process with conditional edges",
+      "Test routing a text doc vs a JSON doc through different paths"
+    ]
+  },
+  {
+    week:3, day:5, topic:"Decision Graph", focus:"Conditional node-to-node document routing", why:"Agents make decisions. A decision graph branches based on document properties — size, type, content. This is the foundation of deterministic agent behavior.",
+    lesson:`<p>A <strong>decision graph</strong> extends the pipeline graph with richer conditions. Each edge has a predicate; the router evaluates predicates in order and takes the first match.</p>
+<pre><span class="kw">class</span> <span class="fn">DecisionGraph</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.nodes = {}
+        <span class="kw">self</span>.rules = {}  <span class="cm"># node -> [(predicate, target), ...]</span>
+
+    <span class="kw">def</span> <span class="fn">add_rule</span>(<span class="kw">self</span>, source, predicate, target):
+        <span class="kw">self</span>.rules.setdefault(source, []).append((predicate, target))
+
+    <span class="kw">def</span> <span class="fn">evaluate</span>(<span class="kw">self</span>, document, start):
+        current = start
+        <span class="kw">while</span> current <span class="kw">in</span> <span class="kw">self</span>.rules:
+            matched = <span class="built_in">False</span>
+            <span class="kw">for</span> predicate, target <span class="kw">in</span> <span class="kw">self</span>.rules[current]:
+                <span class="kw">if</span> predicate(document):
+                    current = target
+                    matched = <span class="built_in">True</span>
+                    <span class="kw">break</span>
+            <span class="kw">if</span> <span class="keyword">not</span> matched:
+                <span class="kw">break</span>
+        <span class="kw">return</span> current</pre>
+<p>Predicates are functions that take a document and return bool. Examples: <code>lambda d: d.char_count() > 1000</code>, <code>lambda d: d.doc_type == 'json'</code>.</p>`,
+    path:"src/documind/orchestration/graph.py", section:"W3D5", test:"tests/test_w3d5.py",
+    quiz:[
+      "What is a predicate function in a decision graph?",
+      "How does the router handle multiple predicates on the same node?",
+      "What happens if no predicate matches at a node?",
+      "How is a decision graph different from a pipeline graph?",
+      "What makes this pattern suitable for agent behavior?"
+    ],
+    tasks:[
+      "Create DecisionGraph with add_rule and evaluate methods",
+      "Add rules: small-text→Process, large-text→Split, json→Validate",
+      "Test evaluation path for each document type",
+      "Add a 'default' rule that matches any document"
+    ]
+  },
+  {
+    week:3, day:6, topic:"State Machine", focus:"Document lifecycle stage transitions", why:"Every document has a lifecycle: ingested → validated → processed → stored. A state machine models these transitions explicitly, preventing invalid moves (like trying to store an unprocessed doc).",
+    lesson:`<p>A <strong>finite state machine</strong> (FSM) has states and transitions. Each transition moves from one state to another based on an event or condition.</p>
+<pre><span class="kw">class</span> <span class="fn">DocumentStateMachine</span>:
+    transitions = {
+        <span class="str">"draft"</span>:     {<span class="str">"validate"</span>: <span class="str">"validating"</span>},
+        <span class="str">"validating"</span>: {<span class="str">"pass"</span>: <span class="str">"processed"</span>, <span class="str">"fail"</span>: <span class="str">"error"</span>},
+        <span class="str">"processed"</span>:  {<span class="str">"store"</span>: <span class="str">"stored"</span>},
+        <span class="str">"error"</span>:      {<span class="str">"retry"</span>: <span class="str">"validating"</span>},
+        <span class="str">"stored"</span>:     {},
+    }
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, initial=<span class="str">"draft"</span>):
+        <span class="kw">self</span>.state = initial
+
+    <span class="kw">def</span> <span class="fn">transition</span>(<span class="kw">self</span>, event):
+        allowed = <span class="kw">self</span>.transitions.get(<span class="kw">self</span>.state, {})
+        <span class="kw">if</span> event <span class="kw">not</span> <span class="kw">in</span> allowed:
+            <span class="kw">raise</span> <span class="built_in">ValueError</span>(<span class="str">f"Cannot {event} from {self.state}"</span>)
+        <span class="kw">self</span>.state = allowed[event]</pre>
+<p>The transitions dict acts as the state transition table. This pattern makes invalid states impossible by construction — you can only reach states that exist in the table.</p>`,
+    path:"src/documind/orchestration/state_machine.py", section:"W3D6", test:"tests/test_w3d6.py",
+    quiz:[
+      "What defines a finite state machine?",
+      "What happens if you attempt an invalid transition?",
+      "How does the state transition table prevent invalid states?",
+      "What event would move a document from 'validating' to 'error'?",
+      "Can a document in 'stored' state be processed again?"
+    ],
+    tasks:[
+      "Create DocumentStateMachine with a transitions dict",
+      "Implement transition(event) that validates and moves state",
+      "Add states: draft, validating, processed, stored, error",
+      "Test: start → validate → pass → store (happy path)"
+    ]
+  },
+  {
+    week:3, day:7, topic:"Orchestrator Ship", focus:"Combine queue + graph + state machine", why:"Today you integrate everything: queue feeds documents into the decision graph, which routes them through the state machine. This is your first working agent pipeline.",
+    lesson:`<p>The <strong>Orchestrator</strong> ties all three components together. Documents enter through a queue, flow through the decision graph (which processes them), and the state machine tracks lifecycle.</p>
+<pre><span class="kw">class</span> <span class="fn">Orchestrator</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.queue = DocumentQueue()
+        <span class="kw">self</span>.router = DecisionGraph()
+        <span class="kw">self</span>.sm = DocumentStateMachine()
+        <span class="kw">self</span>.results = []
+
+    <span class="kw">def</span> <span class="fn">run</span>(<span class="kw">self</span>):
+        <span class="kw">while</span> <span class="kw">not</span> <span class="kw">self</span>.queue.is_empty():
+            doc = <span class="kw">self</span>.queue.dequeue()
+            self.sm.transition(<span class="str">"validate"</span>)
+            path = <span class="kw">self</span>.router.evaluate(doc, <span class="str">"ingest"</span>)
+            self.sm.transition(<span class="str">"pass"</span>)
+            <span class="kw">self</span>.results.append((doc, path))
+            self.sm.transition(<span class="str">"store"</span>)</pre>`,
+    path:"src/documind/orchestration/orchestrator.py", section:"W3D7", test:"tests/test_w3d7.py",
+    quiz:[
+      "What three components does the Orchestrator combine?",
+      "What is the document flow through the Orchestrator?",
+      "How does the Orchestrator handle invalid state transitions?",
+      "What happens when the queue is empty?",
+      "What data structure holds the output of a full orchestration run?"
+    ],
+    tasks:[
+      "Create Orchestrator that composes queue + router + state machine",
+      "Implement run() processing all queued documents",
+      "Track document lifecycle through the state machine",
+      "Test complete flow: enqueue 3 docs → run → verify results"
+    ]
+  },
+  // ──── WEEK 4: FASTAPI CAPSTONE ────
+  {
+    week:4, day:1, topic:"FastAPI Scaffold", focus:"App setup + dependency injection + repo structure", why:"The final week ships your pipeline as a production API. FastAPI gives you automatic OpenAPI docs, type validation via Pydantic, and async support out of the box.",
+    lesson:`<p>A FastAPI app starts with <code>FastAPI()</code> and route decorators. Add Pydantic models for request/response validation — the same pattern as Zod on your frontend.</p>
+<pre><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+
+app = FastAPI(title=<span class="str">"DocuMind API"</span>)
+
+<span class="kw">class</span> <span class="fn">DocumentRequest</span>(BaseModel):
+    content: <span class="built_in">str</span>
+    doc_type: <span class="built_in">str</span> = <span class="str">"text"</span>
+
+<span class="meta">@app.get("/health")</span>
+<span class="kw">async def</span> <span class="fn">health</span>():
+    <span class="kw">return</span> {<span class="str">"status"</span>: <span class="str">"ok"</span>}</pre>
+<p>Dependency injection: FastAPI's <code>Depends()</code> resolves function parameters automatically. Define shared dependencies (DB connections, config) once and inject them where needed.</p>`,
+    path:"src/documind/api/main.py", section:"W4D1", test:"tests/test_w4d1.py",
+    quiz:[
+      "What does FastAPI use for request validation?",
+      "How do you define a route in FastAPI?",
+      "What is the purpose of Depends() in FastAPI?",
+      "What does /health return in the scaffold?",
+      "How do you run a FastAPI app locally?"
+    ],
+    tasks:[
+      "Install FastAPI + uvicorn (add to pyproject.toml)",
+      "Create main.py with FastAPI app + /health endpoint",
+      "Define DocumentRequest Pydantic model",
+      "Run with uvicorn and verify /health returns 200"
+    ]
+  },
+  {
+    week:4, day:2, topic:"POST /ingest", focus:"Receive document array via endpoint", why:"APIs receive data. Today you build the POST endpoint that accepts documents, validates them with Pydantic, and enqueues them for processing.",
+    lesson:`<p>Pydantic models validate incoming JSON automatically. A list of models declares the expected shape.</p>
+<pre><span class="kw">class</span> <span class="fn">DocumentRequest</span>(BaseModel):
+    content: <span class="built_in">str</span>
+    doc_type: <span class="built_in">str</span> = <span class="str">"text"</span>
+    metadata: <span class="built_in">dict</span> = {}
+
+<span class="kw">class</span> <span class="fn">IngestResponse</span>(BaseModel):
+    ingested: <span class="built_in">int</span>
+    document_ids: <span class="built_in">list</span>[<span class="built_in">str</span>]
+
+<span class="meta">@app.post("/ingest", response_model=IngestResponse)</span>
+<span class="kw">async def</span> <span class="fn">ingest_documents</span>(docs: <span class="built_in">list</span>[DocumentRequest]):
+    <span class="kw">for</span> doc <span class="kw">in</span> docs:
+        queue.enqueue(Document(doc.content, doc.doc_type, doc.metadata))
+    <span class="kw">return</span> IngestResponse(
+        ingested=<span class="built_in">len</span>(docs),
+        document_ids=[str(<span class="built_in">id</span>(d)) <span class="kw">for</span> d <span class="kw">in</span> docs]
+    )</pre>`,
+    path:"src/documind/api/main.py", section:"W4D2", test:"tests/test_w4d2.py",
+    quiz:[
+      "How does Pydantic validate incoming JSON?",
+      "What happens if a request has a missing required field?",
+      "What is response_model used for?",
+      "How do you accept a list of items in the request body?",
+      "What status code does FastAPI return for validation errors?"
+    ],
+    tasks:[
+      "Create POST /ingest endpoint accepting list[DocumentRequest]",
+      "Define IngestResponse model with ingested count + IDs",
+      "Wire up the DocumentQueue from Week 3",
+      "Test: curl POST with 2 documents, verify 200 + IDs"
+    ]
+  },
+  {
+    week:4, day:3, topic:"Validate & Clean", focus:"Big O aware validation on incoming data", why:"Your Big O knowledge from Week 2 pays off. Validating thousands of documents in the API handler must be O(n), not O(n²). Profile the validation before deploying.",
+    lesson:`<p>Combine your Week 2 Big O discipline with Week 3's pipeline. Validate each document as it arrives. Use early rejection for invalid docs — fail fast, not at the end.</p>
+<pre><span class="meta">@app.post("/ingest")</span>
+<span class="kw">async def</span> <span class="fn">ingest_documents</span>(docs: <span class="built_in">list</span>[DocumentRequest]):
+    validated = []
+    errors = []
+    <span class="kw">for</span> i, doc <span class="kw">in</span> <span class="built_in">enumerate</span>(docs):
+        <span class="kw">if</span> <span class="keyword">not</span> doc.content.strip():
+            errors.append({<span class="str">"index"</span>: i, <span class="str">"reason"</span>: <span class="str">"empty content"</span>})
+            <span class="kw">continue</span>
+        <span class="kw">if</span> doc.doc_type <span class="kw">not</span> <span class="kw">in</span> Document.allowed_types:
+            errors.append({<span class="str">"index"</span>: i, <span class="str">"reason"</span>: <span class="str">f"unknown type: {doc.doc_type}"</span>})
+            <span class="kw">continue</span>
+        validated.append(doc)
+    <span class="kw">return</span> {<span class="str">"validated"</span>: <span class="built_in">len</span>(validated), <span class="str">"errors"</span>: errors}</pre>
+<p>Notice the guard clauses — early returns, no nested if/else. Each check is O(1) per document, so the whole loop is O(n).</p>`,
+    path:"src/documind/api/main.py", section:"W4D3", test:"tests/test_w4d3.py",
+    quiz:[
+      "Why validate documents one-by-one instead of all at once?",
+      "What makes this validation loop O(n) and not O(n²)?",
+      "What is the pattern for early rejection in a loop?",
+      "What does 'fail fast' mean in an API context?",
+      "How do you report partial validation errors to the client?"
+    ],
+    tasks:[
+      "Add validation: reject empty content, unknown doc_type",
+      "Return separate validated + error lists in response",
+      "Profile the endpoint with 1000 documents",
+      "Document the Big O of the validation in comments"
+    ]
+  },
+  {
+    week:4, day:4, topic:"Store Results", focus:"Dict-backed result storage with O(1) lookups", why:"After processing, results need to be stored and retrievable. A dict-backed store gives O(1) lookup by ID. This is your in-memory database before you add MongoDB Atlas.",
+    lesson:`<p>A <strong>result store</strong> maps document IDs to processing results. Dicts give O(1) insert and lookup. Later you can swap this for Redis or MongoDB without changing the API layer.</p>
+<pre><span class="kw">class</span> <span class="fn">ResultStore</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>._store = {}
+
+    <span class="kw">def</span> <span class="fn">save</span>(<span class="kw">self</span>, doc_id: <span class="built_in">str</span>, result: <span class="built_in">dict</span>):
+        <span class="kw">self</span>._store[doc_id] = result             <span class="cm"># O(1)</span>
+
+    <span class="kw">def</span> <span class="fn">get</span>(<span class="kw">self</span>, doc_id: <span class="built_in">str</span>):
+        <span class="kw">return</span> <span class="kw">self</span>._store.get(doc_id)              <span class="cm"># O(1)</span>
+
+    <span class="kw">def</span> <span class="fn">get_all</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="built_in">list</span>(<span class="kw">self</span>._store.values())          <span class="cm"># O(n)</span></pre>
+<p>Add a GET endpoint to retrieve results by ID:</p>
+<pre><span class="meta">@app.get("/documents/{doc_id}")</span>
+<span class="kw">async def</span> <span class="fn">get_document</span>(doc_id: <span class="built_in">str</span>):
+    result = store.get(doc_id)
+    <span class="kw">if</span> result <span class="kw">is</span> <span class="kw">None</span>:
+        <span class="kw">raise</span> HTTPException(status_code=<span class="num">404</span>, detail=<span class="str">"not found"</span>)
+    <span class="kw">return</span> result</pre>`,
+    path:"src/documind/api/main.py", section:"W4D4", test:"tests/test_w4d4.py",
+    quiz:[
+      "What is the time complexity of dict insert and lookup?",
+      "Why use .get() instead of [] when retrieving results?",
+      "What does list(self._store.values()) return?",
+      "What status code should an API return when a document is not found?",
+      "How would you swap this dict store for MongoDB later?"
+    ],
+    tasks:[
+      "Create ResultStore class backed by dict",
+      "Implement save(doc_id, result) and get(doc_id) methods",
+      "Create GET /documents/{doc_id} endpoint",
+      "Test: ingest → process → store → retrieve by ID"
+    ]
+  },
+  {
+    week:4, day:5, topic:"Full Pipeline Integration", focus:"End-to-end: ingest → validate → process → store → respond", why:"Today everything connects. A POST to /ingest flows through your entire pipeline — queue, validation, processing, storage — and returns the processed result. One endpoint, full chain.",
+    lesson:`<p>Wire all four weeks of work into a single endpoint. Dependency injection keeps it testable.</p>
+<pre><span class="kw">from</span> fastapi <span class="kw">import</span> Depends
+
+<span class="kw">def</span> <span class="fn">get_pipeline</span>():
+    <span class="kw">return</span> Orchestrator(pipeline_config)
+
+<span class="meta">@app.post("/process", response_model=ProcessResponse)</span>
+<span class="kw">async def</span> <span class="fn">process_documents</span>(
+    docs: <span class="built_in">list</span>[DocumentRequest],
+    pipeline: Orchestrator = Depends(get_pipeline)
+):
+    <span class="kw">for</span> doc <span class="kw">in</span> docs:
+        pipeline.queue.enqueue(doc)
+    results = pipeline.run()
+    <span class="kw">return</span> ProcessResponse(
+        processed=<span class="built_in">len</span>(results),
+        results=results
+    )</pre>
+<p>This is the moment all 28 days converge. The Orchestrator from Week 3, validation from Week 4, O(n) discipline from Week 2, and the class hierarchy from Week 1 — all serving a single API call.</p>`,
+    path:"src/documind/api/main.py", section:"W4D5", test:"tests/test_w4d5.py",
+    quiz:[
+      "What does the Orchestrator dependency provide?",
+      "How does Depends() make the pipeline testable?",
+      "What is the full data flow from POST to response?",
+      "Which components from each week are used in the final endpoint?",
+      "What happens to a document that fails validation mid-pipeline?"
+    ],
+    tasks:[
+      "Wire Orchestrator as a FastAPI dependency",
+      "Create POST /process endpoint using full pipeline",
+      "Ensure results are stored via ResultStore",
+      "Test: POST 3 documents → all processed and retrievable"
+    ]
+  },
+  {
+    week:4, day:6, topic:"Polish", focus:"Error handling, logging, type hints", why:"Production code handles errors gracefully, logs everything meaningful, and has complete type annotations. Today you make the repo look professional.",
+    lesson:`<p>Production polish means three things:</p>
+<p><strong>1. Structured error handling</strong>: custom exception classes for each failure mode.</p>
+<pre><span class="kw">class</span> <span class="fn">DocumentValidationError</span>(<span class="built_in">Exception</span>): ...
+<span class="kw">class</span> <span class="fn">PipelineProcessingError</span>(<span class="built_in">Exception</span>): ...
+
+<span class="meta">@app.exception_handler(DocumentValidationError)</span>
+<span class="kw">async def</span> <span class="fn">validation_handler</span>(request, exc):
+    <span class="kw">return</span> JSONResponse(status_code=<span class="num">422</span>, content={<span class="str">"error"</span>: <span class="built_in">str</span>(exc)})</pre>
+<p><strong>2. Logging</strong>: structured logs at every stage.</p>
+<pre><span class="kw">import</span> logging
+logger = logging.getLogger(<span class="str">"documind"</span>)
+logger.info(<span class="str">"Ingested %d documents"</span>, count)</pre>
+<p><strong>3. Type hints everywhere</strong>: run <code>mypy src/ --strict</code> and fix every error. No <code>Any</code> allowed.</p>`,
+    path:"src/documind/api/main.py", section:"W4D6", test:"tests/test_w4d6.py",
+    quiz:[
+      "Why use custom exception classes instead of generic Exception?",
+      "What is the purpose of @app.exception_handler?",
+      "What status code is conventional for validation errors?",
+      "What does mypy --strict enforce?",
+      "Why use logger.info() over print()?"
+    ],
+    tasks:[
+      "Add custom exception classes for each error type",
+      "Wire exception handlers returning proper HTTP status codes",
+      "Add logging at every pipeline stage",
+      "Run mypy --strict src/ and fix all issues"
+    ]
+  },
+  {
+    week:4, day:7, topic:"Ship", focus:"Final commit, README, demo, review Weak topics", why:"The repo is ready for the world. Today you review everything, write a compelling README, and identify weak spots for your resume. This is your public proof of work.",
+    lesson:`<p>Before shipping:</p>
+<ol>
+<li><strong>README</strong>: What is DocuMind? How to run it? What did you learn? Architecture diagram (ASCII or Excalidraw). Badges for test count, Python version, license.</li>
+<li><strong>Clean git history</strong>: squash WIP commits into clean per-day messages. Each day's work is one commit.</li>
+<li><strong>Review weak topics</strong>: Go back to days where confidence ≤ 3. Redo the quiz. Re-read the lesson. Re-run the tests.</li>
+<li><strong>Demo</strong>: Record (or script) a terminal session showing: <code>curl POST /process</code> → documents flow through → results returned.</li>
+</ol>
+<pre><span class="cm"># Final test sweep</span>
+pytest . -v --tb=short
+mypy src/ --strict
+ruff check src/</pre>
+<p>Every test passes. Every type checks. Every file is formatted. Then you push and the repo is public proof of your ability to build production-grade Python from scratch.</p>`,
+    path:"src/documind/", section:"W4D7", test:"pytest . -v",
+    quiz:[
+      "What belongs in a production README?",
+      "Why squash commits before shipping?",
+      "What commands do you run for the final quality sweep?",
+      "How do you identify weak topics from your tracker?",
+      "What makes a good demo of a data pipeline?"
+    ],
+    tasks:[
+      "Write a compelling README with arch diagram and badges",
+      "Squash git history into clean per-day commits",
+      "Run final test sweep: pytest + mypy + ruff",
+      "Review all days with confidence ≤ 3 and re-quiz yourself"
     ]
   }
-};
-
-const QUIZ_QUESTIONS = {
-  1: [
-    "What does self refer to inside a Python method?",
-    "What happens inside __init__ when a class is instantiated?",
-    "Can a class have multiple instances? How does each maintain its own state?",
-    "What is the difference between a class and an object?",
-    "What is the return type of __init__?"
-  ],
-  2: [
-    "What is the difference between a class attribute and an instance attribute?",
-    "How does a @classmethod differ from a regular method?",
-    "What is a @property and when would you use it instead of a regular method?",
-    "How does the factory pattern (from_json) help create objects?",
-    "Why would you want a counter to increment on each instantiation?"
-  ],
-  3: [
-    "What does __repr__ return and who calls it?",
-    "How does __str__ differ from __repr__?",
-    "What must __len__ return? What happens if it returns something else?",
-    "How does __eq__ allow custom equality comparison?",
-    "Which dunder method is called by print()?"
-  ],
-  4: [
-    "What makes an object callable in Python?",
-    "What does __enter__ return and where does that value go?",
-    "When is __exit__ called and what happens if it returns True?",
-    "What does __add__ allow you to overload?",
-    "Why implement __call__ on a class instead of a regular method?"
-  ],
-  5: [
-    "What is inheritance and how does a child class access parent methods?",
-    "How do you define an abstract base class (ABC) in Python?",
-    "What happens if a child class doesn't implement an abstract method?",
-    "How does isinstance() work with inheritance hierarchies?",
-    "Why would you use inheritance vs composition?"
-  ],
-  6: [
-    "What does super() do inside an overridden method?",
-    "What is method resolution order (MRO) and how does it work?",
-    "Why use ABC instead of just raising NotImplementedError?",
-    "Can you call the parent's overridden method from the child?",
-    "What does @abstractmethod enforce at instantiation time?"
-  ],
-  7: [
-    "What is the factory pattern and when is it useful?",
-    "How does a classmethod enable the factory pattern?",
-    "What is polymorphism and how does it apply to chain_process()?",
-    "Why should DocumentFactory.create() return BaseDocument instead of a concrete type?",
-    "What happens when you add a new document type — how many files do you change?"
-  ]
-};
-
-const WEEK_NAMES = ["OOP Foundation", "Data Structures & Flow", "Complex Structures for AI Agents", "FastAPI Capstone"];
-
-const CURRICULUM = [
-  { week:1, day:1, topic:"Document Class", focus:"Classes, self, constructor — build the core Document", why:"Every PyTorch model is an instance of a class. Document is your first.", path:"src/documind/core/document.py", test:"tests/test_day1.py", quiz:"quizzes/week1/day1_quiz.py", section:"DAY 1 — Classes & self" },
-  { week:1, day:2, topic:"Class Attributes & Factory", focus:"Class-level state, classmethods, @property", why:"Shared config across all instances; factory pattern for creating documents from JSON.", path:"src/documind/core/document.py", test:"tests/test_day2.py", quiz:"quizzes/week1/day2_quiz.py", section:"DAY 2 — Class vs Instance Attributes" },
-  { week:1, day:3, topic:"Dunder Methods I", focus:"__repr__, __str__, __len__, __eq__ — make objects readable", why:"PyTorch modules use __repr__; len() works on any object with __len__.", path:"src/documind/core/document.py", test:"tests/test_day3.py", quiz:"quizzes/week1/day3_quiz.py", section:"DAY 3 — Dunder Methods" },
-  { week:1, day:4, topic:"Dunder Methods II", focus:"__call__, __enter__/__exit__, __add__ — callable & composable", why:"model(x) is __call__; with open() is __enter__/__exit__; + is __add__.", path:"src/documind/core/document.py", test:"tests/test_day4.py", quiz:"quizzes/week1/day4_quiz.py", section:"DAY 4 — Callable, Context Manager, Operator Overloading" },
-  { week:1, day:5, topic:"Inheritance & Base Classes", focus:"BaseDocument → TextDocument, JSONDocument, CSVDocument", why:"nn.Module is a base class — you inherit and override forward(). Same pattern.", path:"src/documind/core/processors.py", test:"tests/test_day5.py", quiz:"quizzes/week1/day5_quiz.py", section:"DAY 5 — Inheritance & Base Classes" },
-  { week:1, day:6, topic:"Abstract Classes & Overriding", focus:"ABC, abstractmethod, super(), validate() contracts", why:"Framework designers define interfaces with ABCs; you implement the logic.", path:"src/documind/core/processors.py", test:"tests/test_day6.py", quiz:"quizzes/week1/day6_quiz.py", section:"DAY 6 — Abstract Classes & Overriding" },
-  { week:1, day:7, topic:"Factory Pattern & Polymorphism", focus:"DocumentFactory, chain_process, polymorphic dispatch", why:"Write code that works on ANY document type without if/elif chains.", path:"src/documind/core/processors.py", test:"tests/test_day7.py", quiz:"quizzes/week1/day7_quiz.py", section:"DAY 7 — Factory Pattern & Polymorphism" },
-  { week:2, day:1, topic:"Batch Processing w/ Lists", focus:"DocumentCollection — indexing, slicing, appending batches" },
-  { week:2, day:2, topic:"Filter, Map, Sort", focus:"Transforming collections with comprehensions and built-ins" },
-  { week:2, day:3, topic:"Copy vs Reference", focus:"Avoid silent bugs from shared references in pipelines" },
-  { week:2, day:4, topic:"Config with Dicts", focus:"PipelineConfig — key-value storage, O(1) lookups" },
-  { week:2, day:5, topic:"Deep JSON Parsing", focus:".get(), recursive flatten, safe navigation" },
-  { week:2, day:6, topic:"Big O Profiling", focus:"Profile your own pipeline; O(1) vs O(n) vs O(n²)" },
-  { week:2, day:7, topic:"Big O Rewrite", focus:"Rewrite O(n²) → O(n) in your collection code" },
-  { week:3, day:1, topic:"Processing Queue", focus:"FIFO queue for managing document backlogs" },
-  { week:3, day:2, topic:"Priority Queue", focus:"Urgent documents processed first via heapq" },
-  { week:3, day:3, topic:"Tree Traversal", focus:"Document category hierarchy; DFS/BFS" },
-  { week:3, day:4, topic:"Pipeline Routing (Graph)", focus:"Directed graph — multi-stage document routing" },
-  { week:3, day:5, topic:"Decision Graph", focus:"Conditional node-to-node document routing" },
-  { week:3, day:6, topic:"State Machine", focus:"Pipeline stage transitions for document lifecycle" },
-  { week:3, day:7, topic:"Orchestrator Ship", focus:"Full Orchestrator — combine queue + graph + state machine" },
-  { week:4, day:1, topic:"FastAPI Scaffold", focus:"App setup + dependency injection + repo structure" },
-  { week:4, day:2, topic:"POST /ingest", focus:"Receive document array via endpoint" },
-  { week:4, day:3, topic:"Validate & Clean", focus:"Big O aware validation loop on incoming data" },
-  { week:4, day:4, topic:"Store Results", focus:"Dict-backed result storage with O(1) lookups" },
-  { week:4, day:5, topic:"API Harness Integration", focus:"End-to-end: ingest → validate → store → respond" },
-  { week:4, day:6, topic:"Polish", focus:"Error handling, structured logging, type hints everywhere" },
-  { week:4, day:7, topic:"Ship", focus:"Final commit, README, demo, review weak topics" }
 ];
 
-// ══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+const WEEK_NAMES = ["OOP Foundation", "Data Structures & Flow", "Complex Structures for AI Agents", "FastAPI Capstone"];
+const SK = 'documind_v2';
 
-const STORAGE_KEY = 'documind_progress';
-function loadProgress() { try { const r=localStorage.getItem(STORAGE_KEY); return r?JSON.parse(r):{}; }catch(e){return{}} }
-function saveProgress(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+function loadP() { try { const r=localStorage.getItem(SK); if(r) return JSON.parse(r); } catch(e){} return {}; }
+function saveP(s) { localStorage.setItem(SK, JSON.stringify(s)); }
+let progress = loadP();
+let sel = null;
 
-let progress = loadProgress();
-let selectedDay = null;
-const DAY_COUNT = CURRICULUM.length;
+function gs(i) { const p=progress[i]; if(!p) return 'not-started'; if(p.done) return 'completed'; return 'not-started'; }
 
-function getDayStatus(idx) {
-  const p = progress[idx];
-  if (!p) return 'not-started';
-  if (p.done) return 'completed';
-  if (p.confidence != null) return 'in-progress';
-  return 'not-started';
-}
+function cs() { let c=0; for(let i=0;i<LESSONS.length;i++){const p=progress[i];if(p&&p.done)c++} return c; }
+function st() { let s=0; for(let i=0;i<LESSONS.length;i++){const p=progress[i];if(p&&p.done)s++;else break} return s; }
 
-function computeCompleted() { let c=0; for(let i=0;i<DAY_COUNT;i++){const p=progress[i];if(p&&p.done)c++} return c; }
-function computeStreak() { let s=0; for(let i=0;i<DAY_COUNT;i++){const p=progress[i];if(p&&p.done)s++;else break} return s; }
+// ── RENDER TIMELINE ──
+function renderTL() {
+  const c = document.getElementById('tl');
+  c.innerHTML = '';
+  const done = cs(), streak = st(), pct = Math.round((done/LESSONS.length)*100);
+  document.getElementById('pf').style.width = pct+'%';
+  document.getElementById('pt').textContent = `${done} / ${LESSONS.length} days`;
+  document.getElementById('hDone').textContent = done;
+  document.getElementById('hStreak').textContent = streak;
 
-// ══════════════════════════════════════════════════════════════
-// RENDER TIMELINE
-// ══════════════════════════════════════════════════════════════
-
-function renderTimeline() {
-  const container = document.getElementById('timeline');
-  container.innerHTML = '';
-  const done = computeCompleted(), streak = computeStreak();
-  const pct = Math.round((done/DAY_COUNT)*100);
-  document.getElementById('progressFill').style.width = pct+'%';
-  document.getElementById('progressText').textContent = `${done} / ${DAY_COUNT} days`;
-  document.getElementById('headerCompleted').textContent = done;
-  document.getElementById('headerStreak').textContent = streak;
-
-  let curW = 0, group = null;
-  for (let i = 0; i < DAY_COUNT; i++) {
-    const d = CURRICULUM[i];
-    if (d.week !== curW) {
-      curW = d.week;
-      group = document.createElement('div'); group.className = 'week-group';
-      const lbl = document.createElement('div'); lbl.className = 'week-label';
-      lbl.textContent = `Week ${d.week} — ${WEEK_NAMES[d.week-1]||''}`;
-      group.appendChild(lbl); container.appendChild(group);
+  let w = 0, g = null;
+  for(let i=0;i<LESSONS.length;i++) {
+    const d = LESSONS[i];
+    if(d.week !== w) {
+      w = d.week;
+      g = document.createElement('div'); g.className='week-g';
+      const l = document.createElement('div'); l.className='week-l';
+      l.textContent = `Week ${w} — ${WEEK_NAMES[w-1]||''}`;
+      g.appendChild(l); c.appendChild(g);
     }
-    const st = getDayStatus(i);
-    const item = document.createElement('div');
-    item.className = `day-item ${st}`;
-    if (i === selectedDay) item.classList.add('active');
-    item.dataset.index = i;
-    item.innerHTML = `<div class="day-indicator">${d.week}.${d.day}</div><div class="day-meta"><div class="day-topic">${d.topic}</div><div class="day-sub">${d.focus}</div></div><div class="day-status-dot"></div>`;
-    item.addEventListener('click', () => selectDay(i));
-    group.appendChild(item);
+    const st2 = gs(i);
+    const it = document.createElement('div');
+    it.className = `day-i ${st2}`;
+    if(i===sel) it.classList.add('active');
+    it.dataset.i = i;
+    it.innerHTML = `<div class="day-dot">${w}.${d.day}</div><div class="day-m"><div class="t">${d.topic}</div><div class="s">${d.focus}</div></div><div class="day-sd"></div>`;
+    it.addEventListener('click', ()=>{sel=i; renderTL(); renderDetail(i);});
+    g.appendChild(it);
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// RENDER DETAIL — explanation first, then everything else
-// ══════════════════════════════════════════════════════════════
+// ── RENDER DETAIL ──
+function renderDetail(idx) {
+  const d = LESSONS[idx];
+  const p = progress[idx]||{};
+  const panel = document.getElementById('panel');
 
-function renderLessonHTML(dayNum) {
-  const lesson = LESSONS[dayNum];
-  if (!lesson) {
-    return `<p style="color:var(--text-muted);font-size:14px;">Lesson content for this day is under development — check CURRICULUM.md and the code file for guidance.</p>`;
-  }
-  return lesson.sections.map(s => {
-    let html = `<div class="lesson-section fade-in">`;
-    if (s.heading) html += `<h4>${s.heading}</h4>`;
-    if (s.body) html += s.body.split('\n\n').map(p => `<p>${p.trim()}</p>`).join('');
-    if (s.code) {
-      html += `<div class="code-block">${s.code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
-    }
-    if (s.highlight) {
-      html += `<div class="highlight-box"><strong>Key insight:</strong> ${s.highlight}</div>`;
-    }
-    html += `</div>`;
-    return html;
-  }).join('');
-}
+  panel.innerHTML = `<div class="dd">
+    <div class="dh">
+      <div class="db">Week ${d.week} · Day ${d.week}.${d.day} · ${d.topic}</div>
+      <h2>${d.topic}</h2>
+      <p class="ft">${d.focus}</p>
+    </div>
+    <div class="dw"><strong>Why this matters</strong>: ${d.why}</div>
 
-function renderDetail(index) {
-  const d = CURRICULUM[index];
-  const p = progress[index] || {};
-  const panel = document.getElementById('detailPanel');
-  const dayNum = d.day;
-  const hasLesson = LESSONS[dayNum];
-  const quizQs = (d.week === 1) ? (QUIZ_QUESTIONS[dayNum] || null) : null;
+    <!-- Step 1: Explanation -->
+    <div class="step open">
+      <div class="step-h" data-toggle><span class="si">📖</span><h3>Learn the Concept</h3><span class="ch">▸</span></div>
+      <div class="step-b"><div class="lesson-text">${d.lesson}</div></div>
+    </div>
 
-  // Determine which steps are done
-  const stepDone = (s) => {
-    if (s === 1) return !!hasLesson; // explanation exists
-    if (s === 2) return !!quizQs;    // quiz exists
-    return true;
-  };
-
-  panel.innerHTML = `
-    <div class="detail-inner">
-      <div class="day-detail">
-
-        <!-- Step indicator -->
-        <div class="steps">
-          <div class="step ${stepDone(1)?'done':'active'}">
-            <span class="step-num">1</span> Read the lesson
-          </div>
-          <div class="step ${stepDone(2)?'done':''} ${!stepDone(1)?'':''}">
-            <span class="step-num">2</span> Take the quiz
-          </div>
-          <div class="step">
-            <span class="step-num">3</span> Write the code
-          </div>
-          <div class="step">
-            <span class="step-num">4</span> Pass the tests
-          </div>
-        </div>
-
-        <!-- Day header -->
-        <div class="day-header">
-          <div class="day-breadcrumb">Week ${d.week} · Day ${d.week}.${dayNum} · ${d.topic}</div>
-          <h2>${d.topic}</h2>
-          <p class="focus-text">${d.focus}</p>
-        </div>
-
-        <!-- ═══ STEP 1: EXPLANATION (renders FIRST, hero of the page) ═══ -->
-        <div class="explanation">
-          ${renderLessonHTML(dayNum)}
-        </div>
-
-        <!-- ═══ STEP 2: QUIZ ═══ -->
-        <div class="section-card ${quizQs ? 'open' : ''}">
-          <div class="section-card-header" data-toggle>
-            <span class="icon">📝</span>
-            <h3>Step 2: Quiz${quizQs ? ` (${quizQs.length} questions)` : ' — Coming soon'}</h3>
-            <span class="chevron">▸</span>
-          </div>
-          <div class="section-card-body">
-            ${quizQs ? `
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Answer these before writing code. Open <code style="background:var(--border);padding:1px 6px;border-radius:3px;font-size:12px;">${d.quiz}</code> to record your answers.</p>
-            <ul class="quiz-questions">${quizQs.map((q,qi)=>`<li><span class="q-num">Q${qi+1}.</span> ${q}</li>`).join('')}</ul>
-            ` : `<p style="font-size:13px;color:var(--text-muted);">Quiz content will be added when this week's curriculum is built.</p>`}
-          </div>
-        </div>
-
-        <!-- ═══ STEP 3: TASKS + CODE FILE ═══ -->
-        <div class="section-card open">
-          <div class="section-card-header" data-toggle>
-            <span class="icon">📄</span>
-            <h3>Step 3: Code — <code style="font-family:var(--font-mono);font-size:12px;background:var(--bg);padding:1px 6px;border-radius:3px;">${d.path}</code></h3>
-            <span class="chevron">▸</span>
-          </div>
-          <div class="section-card-body">
-            <div class="file-path">
-              <span class="path-text">${d.path}</span>
-              <button class="copy-btn" data-copy="${d.path}">Copy</button>
-            </div>
-            <p style="margin-top:10px;font-size:13px;color:var(--text-muted);">
-              Look for the section <code style="background:var(--border);padding:1px 6px;border-radius:3px;font-size:12px;">${d.section || d.topic}</code> and fill in the TODO stubs.
-            </p>
-            ${d.week === 1 ? `
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:10px;">
-              <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Open ${d.path} in your editor</li>
-              <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Find the ${d.section || "day's"} section</li>
-              <li style="padding:5px 10px;background:var(--bg);border-radius:4px;font-size:12px;color:var(--text-secondary);border-left:2px solid var(--accent);">Replace pass with real code</li>
-            </ul>` : ''}
-          </div>
-        </div>
-
-        <!-- ═══ STEP 4: TEST ═══ -->
-        <div class="section-card open">
-          <div class="section-card-header" data-toggle>
-            <span class="icon">🧪</span>
-            <h3>Step 4: Test</h3>
-            <span class="chevron">▸</span>
-          </div>
-          <div class="section-card-body">
-            <div class="test-command">
-              <span class="cmd-text">pytest ${d.test} -v</span>
-              <button class="copy-btn" data-copy="pytest ${d.test} -v">Copy</button>
-            </div>
-            <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">
-              Run from the repo root. All tests must pass before marking complete.
-            </p>
-          </div>
-        </div>
-
-        <!-- ═══ STATUS TRACKER ═══ -->
-        <div class="section-card open">
-          <div class="section-card-header" data-toggle>
-            <span class="icon">🎯</span>
-            <h3>Status</h3>
-            <span class="chevron">▸</span>
-          </div>
-          <div class="section-card-body">
-            <div class="status-controls">
-              <button class="btn ${p.done?'btn-primary active':''}" id="markDoneBtn">${p.done?'✓ Completed':'Mark Complete'}</button>
-              <div class="confidence-group">
-                <label>Confidence:</label>
-                <div class="confidence-stars" id="confidenceStars">
-                  ${[1,2,3,4,5].map(n=>`<button class="star-btn ${n<=(p.confidence||0)?'filled':''}" data-star="${n}">★</button>`).join('')}
-                </div>
-              </div>
-            </div>
-            <div class="notes-group">
-              <textarea id="dayNotes" placeholder="Notes / blockers / insights..." rows="2">${p.notes||''}</textarea>
-            </div>
-          </div>
-        </div>
-
+    <!-- Step 2: Quiz -->
+    <div class="step">
+      <div class="step-h" data-toggle><span class="si">📝</span><h3>Quiz Yourself</h3><span class="st">5 questions</span><span class="ch">▸</span></div>
+      <div class="step-b">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Answer these before writing code. Record your answers in <code style="background:var(--border);padding:1px 5px;border-radius:3px;font-size:11px;">quizzes/week${d.week}/day${d.day}_quiz.py</code>.</p>
+        <ul class="ql">${d.quiz.map((q,qi)=>'<li><span class="qn">Q'+(qi+1)+'.</span> '+q+'</li>').join('')}</ul>
       </div>
     </div>
-  `;
+
+    <!-- Step 3: Tasks & Code -->
+    <div class="step">
+      <div class="step-h" data-toggle><span class="si">⚡</span><h3>Write the Code</h3><span class="st">${d.tasks.length} tasks</span><span class="ch">▸</span></div>
+      <div class="step-b">
+        <div class="fp"><span class="pt">${d.path}</span><button class="cb" data-copy="${d.path}">Copy</button></div>
+        <p style="font-size:12px;color:var(--text-muted);margin:8px 0;">Look for section <code style="background:var(--border);padding:1px 5px;border-radius:3px;font-size:11px;">${d.section}</code> — fill in the TODO stubs.</p>
+        <ul class="tasks">${d.tasks.map(t=>'<li>'+t+'</li>').join('')}</ul>
+      </div>
+    </div>
+
+    <!-- Step 4: Test -->
+    <div class="step">
+      <div class="step-h" data-toggle><span class="si">🧪</span><h3>Pass the Test</h3><span class="ch">▸</span></div>
+      <div class="step-b">
+        <div class="tc"><span class="ct">pytest ${d.test} -v</span><button class="cb" data-copy="pytest ${d.test} -v">Copy</button></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">Run from repo root. All tests must pass before marking complete.</p>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="step open">
+      <div class="step-h"><span class="si">🎯</span><h3>Track Progress</h3><span class="ch">▸</span></div>
+      <div class="step-b">
+        <div class="sc">
+          <button class="btn ${p.done?'btn-p active':''}" id="mkDone">${p.done?'✓ Completed':'Mark Complete'}</button>
+          <div class="cg"><label>Confidence:</label><div class="cs" id="cStars">${[1,2,3,4,5].map(n=>'<button class="sb '+(n<=(p.confidence||0)?'fl':'')+'" data-s="'+n+'">★</button>').join('')}</div></div>
+        </div>
+        <div class="ng"><textarea id="dayNotes" placeholder="Notes / blockers / insights..." rows="2">${p.notes||''}</textarea></div>
+      </div>
+    </div>
+  </div>`;
 
   // Wire toggles
-  panel.querySelectorAll('[data-toggle]').forEach(h => {
-    h.addEventListener('click', () => h.closest('.section-card').classList.toggle('open'));
+  panel.querySelectorAll('[data-toggle]').forEach(h=>{
+    h.addEventListener('click',()=>{h.closest('.step').classList.toggle('open');});
   });
-
-  // Wire copy buttons
-  panel.querySelectorAll('[data-copy]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(btn.dataset.copy).then(() => {
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
-      }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = btn.dataset.copy; document.body.appendChild(ta);
-        ta.select(); document.execCommand('copy');
-        document.body.removeChild(ta);
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+  // Copy buttons
+  panel.querySelectorAll('[data-copy]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const t=b.dataset.copy;
+      navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied!';setTimeout(()=>{b.textContent='Copy';},1200);}).catch(()=>{
+        const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+        b.textContent='Copied!';setTimeout(()=>{b.textContent='Copy';},1200);
       });
     });
   });
-
   // Mark done
-  const doneBtn = document.getElementById('markDoneBtn');
-  if (doneBtn) doneBtn.addEventListener('click', () => {
-    if (!progress[index]) progress[index] = {done:false,confidence:null,notes:''};
-    progress[index].done = !progress[index].done;
-    saveProgress(progress);
-    renderDetail(index);
-    renderTimeline();
-  });
-
-  // Confidence
-  const stars = document.getElementById('confidenceStars');
-  if (stars) stars.querySelectorAll('.star-btn').forEach(s => {
-    s.addEventListener('click', () => {
-      const val = parseInt(s.dataset.star);
-      if (!progress[index]) progress[index] = {done:false,confidence:null,notes:''};
-      progress[index].confidence = progress[index].confidence === val ? null : val;
-      saveProgress(progress);
-      renderDetail(index);
-      renderTimeline();
+  const db=document.getElementById('mkDone');
+  if(db) db.addEventListener('click',()=>{if(!progress[idx])progress[idx]={done:false,confidence:null,notes:''};progress[idx].done=!progress[idx].done;saveP(progress);renderDetail(idx);renderTL();});
+  // Stars
+  const sc=document.getElementById('cStars');
+  if(sc) sc.querySelectorAll('.sb').forEach(s=>{
+    s.addEventListener('click',()=>{
+      const v=parseInt(s.dataset.s);
+      if(!progress[idx])progress[idx]={done:false,confidence:null,notes:''};
+      progress[idx].confidence=progress[idx].confidence===v?null:v;
+      saveP(progress);renderDetail(idx);renderTL();
     });
   });
-
   // Notes
-  const notesArea = document.getElementById('dayNotes');
-  if (notesArea) {
-    let t; notesArea.addEventListener('input', () => {
-      clearTimeout(t);
-      t = setTimeout(() => {
-        if(!progress[index]) progress[index] = {done:false,confidence:null,notes:''};
-        progress[index].notes = notesArea.value;
-        saveProgress(progress);
-      }, 500);
-    });
+  const na=document.getElementById('dayNotes');
+  if(na){
+    let st2=null;
+    na.addEventListener('input',()=>{clearTimeout(st2);st2=setTimeout(()=>{if(!progress[idx])progress[idx]={done:false,confidence:null,notes:''};progress[idx].notes=na.value;saveP(progress);},500);});
   }
+  // Scroll detail to top on day change
+  panel.scrollTop = 0;
 }
 
-function selectDay(index) {
-  selectedDay = index;
-  renderTimeline();
-  renderDetail(index);
-  const items = document.querySelectorAll('.day-item');
-  if(items[index]) items[index].scrollIntoView({block:'nearest',behavior:'smooth'});
+// ── THEME ──
+function initTheme(){
+  const s=localStorage.getItem('documind_theme');
+  if(s==='light'||s==='dark') document.documentElement.setAttribute('data-theme',s);
+  updateThemeIcon();
+}
+function toggleTheme(){
+  const c=document.documentElement.getAttribute('data-theme');
+  const n=c==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',n);
+  localStorage.setItem('documind_theme',n);
+  updateThemeIcon();
+}
+function updateThemeIcon(){
+  const t=document.documentElement.getAttribute('data-theme');
+  const b=document.getElementById('themeBtn');
+  if(b) b.textContent=t==='dark'?'☀️':'🌙';
 }
 
-// ══════════════════════════════════════════════════════════════
-// THEME
-// ══════════════════════════════════════════════════════════════
-
-function initTheme() { const s=localStorage.getItem('documind_theme'); if(s==='light'||s==='dark') document.documentElement.setAttribute('data-theme',s); updateThemeIcon(); }
-function toggleTheme() { const c=document.documentElement.getAttribute('data-theme'), n=c==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); localStorage.setItem('documind_theme',n); updateThemeIcon(); }
-function updateThemeIcon() { const t=document.documentElement.getAttribute('data-theme'); document.getElementById('themeToggle').textContent=t==='dark'?'☀️':'🌙'; }
-
-// ══════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════
-
-document.addEventListener('DOMContentLoaded', () => {
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
   initTheme();
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-  renderTimeline();
-  selectDay(0); // auto-select Day 1
+  document.getElementById('themeBtn').addEventListener('click',toggleTheme);
+  renderTL();
+  sel=0;
+  renderDetail(0);
 });
 </script>
 </body>
